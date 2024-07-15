@@ -1,0 +1,256 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-myoffer'>
+
+        <h2 class='section-register-title'>Mes offres</h2>
+
+
+        <!-- status section -->
+
+        <div class='section-search-result-element-offer-status-div offer'>
+
+            <span class='section-search-result-element-offer-status-div-span'>Légende</span>
+
+            <div class='section-search-result-element-offer-status-div-div'>
+
+                <div class='section-search-result-element-offer-status-div-div-div-color'>
+
+                    <div class='section-search-result-element-offer-status-div-div-div-color-div offer pending'></div>
+                    <div class='section-search-result-element-offer-status-div-div-div-color-div offer denied'></div>
+                    <div class='section-search-result-element-offer-status-div-div-div-color-div offer accepted'></div>
+
+                </div>
+
+                <div class='section-search-result-element-offer-status-div-div-div-label offer'>
+
+                    <span class='section-search-result-element-offer-status-div-div-div-span'>Offre non traitée</span>
+                    <span class='section-search-result-element-offer-status-div-div-div-span'>Offre refusée</span>
+                    <span class='section-search-result-element-offer-status-div-div-div-span'>Offre acceptée</span>
+                    
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+        <!---->
+
+
+        <span class='myoffer-span-presentation'>Retrouvez l'ensemble de vos offres ici:</span>
+
+
+
+        
+
+        <div class='section-myoffer-div'>
+
+            <div class='section-myoffer-div-button-div'>
+
+                <button type='button' class='section-my-offer-button-received' name='section-my-offer-button-received' (click)='getOffer("received")'>
+                    <span class='section-my-offer-button-span'>Reçues</span>
+                    <img class='section-my-offer-button-img received' src='../../../assets/pictures/arrow-left-short.svg' />
+                </button>
+
+                <button type='button' class='section-my-offer-button-sent' name='section-my-offer-button-sent' (click)='getOffer("sent")'>
+                    <span class='section-my-offer-button-span'>Envoyées</span>
+                    <img class='section-my-offer-button-img sent' src='../../../assets/pictures/arrow-left-short.svg' />
+                </button>
+
+            </div>
+        </div>
+
+
+
+        <table class='table-myoffer-result'>
+
+            <thead>
+                <tr>
+                    <th>Offreur:</th>
+                    <th>Montant de l'offre:</th>
+                    <th>Heure de l'offre:</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr *ngFor='let offer of offerResult' class='table-myoffer-result-tbody-tr' [ngClass]='offer.offer_status' [attr.data-offer-id]='offer.offer_id' (click)='handleClickRowOffer($event)'>
+                    <td>{{ offer.user_offer_firstname }}</td>
+                    <td>{{ offer.offer_offerprice }} €</td>
+                    <td>{{ offer.offer_created_at }}</td>
+                    
+                    <table>
+                        <tr *ngIf='offer.product_name.length > 20' class='table-myoffer-result-tbody-tr-table-tr'>{{ offer.product_name.substring(0, 20) }}..</tr>
+                        <tr *ngIf='offer.product_name.length <= 20' class='table-myoffer-result-tbody-tr-table-tr'>{{ offer.product_name }}</tr>
+
+
+                        <img *ngIf='offer.message_not_read' src='../../../assets/pictures/envelope.svg' class='img-envelope offer active' /> 
+                        <img *ngIf='!offer.message_not_read' src='../../../assets/pictures/envelope.svg' class='img-envelope offer' />
+
+                    </table>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+
+
+        <!-- specific offer section -->
+
+        <section class='section-myoffer-section-specific-offer'>
+
+            <div class='section-myoffer-section-specific-offer-div'>
+
+                <button type='button' class='cross-filter-offer' name='cross-filter-offer' (click)='handleClickCrossOffer($event)'>x</button>
+
+                <div *ngIf='offerSpecific[0] !== undefined' class='section-myoffer-section-specific-offer-div-div'>
+
+                    <div class='specific-offer-div-wrap'>
+
+                        <img class='specific-offer-img' src='http://localhost:8000/uploads/pictures/{{ offerSpecific[0]["photo_photo_list"].split(",")[0] }}' />
+
+                    </div>
+
+
+
+                    <a class='specific-offer-anchor' href='/product/{{ offerSpecific[0]["product_id"] }}'>Voir produit</a>
+
+
+
+                    <span class='specific-offer-product'>{{ offerSpecific[0]["product_name"] }}</span>
+
+                    <span class='specific-offer-city'>{{ offerSpecific[0]["product_city"].charAt(0).toUpperCase() + offerSpecific[0]["product_city"].slice(1) }}</span>
+
+
+
+                    <div class='specific-offer-div-wrap'>
+
+                        <div class='specific-offer-div-wrap-div'>
+                            <span class='specific-offer-span'>Offreur:</span>
+                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["user_offer_firstname"].charAt(0).toUpperCase() + offerSpecific[0]["user_offer_firstname"].slice(1) }}</span>
+                        </div>
+
+                        <div class='specific-offer-div-wrap-div'>
+                            <span class='specific-offer-span'>Montant:</span>
+                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["offer_offerprice"] }} €</span>
+                        </div>
+
+                        <div class='specific-offer-div-wrap-div'>
+                            <span class='specific-offer-span'>Statut:</span>
+                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["offer_status"] == "pending" ? "En attente" : "" }}</span>
+                        </div>
+
+
+                        <!-- accept deny button condition -->
+
+                            <!-- <div *ngIf='offerSpecific[0]["product_user_id"] == this.appService.user.id && offerSpecific[0]["offer_status"] == "pending"' class='specific-offer-div-wrap-div'>
+                                <button type='button' class='specific-offer-button-accept' name='specific-offer-button-accept' (click)='handleClickAcceptDenyOffer($event, "accept")'>Accepter</button>
+                                <button type='button' class='specific-offer-button-deny' name='specific-offer-button-deny' (click)='handleClickAcceptDenyOffer($event, "deny")'>Refuser</button>
+                            </div> -->
+
+                            <div *ngIf='offerSpecific[0]["offer_user_offer"] !== offerSpecific[0]["product_user_id"] && 
+                                        offerSpecific[0]["product_user_id"] == this.appService.user.id &&
+                                        offerSpecific[0]["offer_status"] == "pending"' class='specific-offer-div-wrap-div'>
+                                <button type='button' class='specific-offer-button-accept' name='specific-offer-button-accept' (click)='handleClickAcceptDenyOffer($event, "accepted")'>Accepter</button>
+                                <button type='button' class='specific-offer-button-deny' name='specific-offer-button-deny' (click)='handleClickAcceptDenyOffer($event, "denied")'>Refuser</button>
+                            </div>
+
+
+
+                            <!-- <div *ngIf='offerSpecific[0]["product_user_id"] == this.appService.user.id && offerSpecific[0]["offer_status"] !== "pending"' class='specific-offer-div-wrap-div'>
+                                <span *ngIf='offerSpecific[0]["offer_status"] == "accepted"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Accepté</span>
+                                <span *ngIf='offerSpecific[0]["offer_status"] == "denied"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Refusé</span>
+                            </div> -->
+
+                            <div *ngIf='offerSpecific[0]["offer_status"] !== "pending"' class='specific-offer-div-wrap-div'>
+                                <span *ngIf='offerSpecific[0]["offer_status"] == "accepted"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Accepté</span>
+                                <span *ngIf='offerSpecific[0]["offer_status"] == "denied"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Refusé</span>
+                            </div>
+
+                        <!-- -->
+
+
+
+
+                        <div class='specific-offer-div-wrap-div'>
+
+                            <form class='specific-offer-messaging-form' name='specific-offer-messaging-form' method='post' (submit)='handleSubmitMessage($event)'>
+
+                                <span *ngIf='offerSpecific[0]["product_user_id"] == this.appService.user.id' class='specific-offer-span'>Contacter {{ offerSpecific[0]["user_offer_firstname"] }}</span>
+
+                                <span *ngIf='offerSpecific[0]["product_user_id"] !== this.appService.user.id' class='specific-offer-span'>Contacter {{ offerSpecific[0]["user_product_firstname"] }}</span>
+
+                                <div class='specific-offer-div-messaging'>
+
+
+
+                                    <!-- fake mess -->
+
+                                    <div *ngFor='let message of this.appService.counterFakeMessage(5); let i = index' class='specific-offer-div-messaging-div-wrap-fake'>
+
+                                        <span class='specific-offer-div-messaging-span-user'>FakeUser</span>
+
+                                        <span class='specific-offer-div-messaging-span-message'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt ducimus nisi autem illo explicabo, est odio tempore sunt temporibus optio.</span>
+
+                                        <span class='specific-offer-div-messaging-span-datetime'>{{ this.appService.getCurrentDateTime() }}</span>
+
+                                    </div>
+
+                                    <!-- -->
+
+
+
+
+
+
+
+                                    <div *ngFor='let message of offerSpecificMessage' class='specific-offer-div-messaging-div-wrap'>
+
+                                        <span class='specific-offer-div-messaging-span-user'>{{ message['user_message_firstname'].charAt(0).toUpperCase() + message['user_message_firstname'].slice(1) }}:</span>
+
+                                        <span class='specific-offer-div-messaging-span-message'>{{ message['message_message'] }}</span>
+
+                                        <span class='specific-offer-div-messaging-span-datetime'>{{ message['message_created_at'] }}</span>
+
+                                        <span class='specific-offer-div-messaging-span-message-id-hidden' [attr.data-message-id]='message["message_id"]'></span>
+
+                                    </div>
+
+
+
+                                </div>
+
+                                <input type='text' class='specific-offer-input-messaging' id='specific-offer-input-messaging' name='specific-offer-input-messaging' (keyup)='this.appService.handleKeyUpInputLength($event)'/>
+
+                                <div class='specific-offer-button-submit-messaging-wrap'>
+                                    <button type='submit' class='specific-offer-button-submit-messaging' name='specific-offer-button-submit-messaging'>Envoyer</button>
+                                </div>
+
+                            </form>
+                        
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+        <!-- -->
+
+    </section>
+    
+</main>

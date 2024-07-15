@@ -1,0 +1,111 @@
+<main class='main'>
+
+    <section class='section-home'>
+
+        <div class='anchor-post-wrap-div'>
+
+            <a routerLink='/post' class='section-home-post'>Déposer un produit</a>
+
+            <img src='../../../assets/pictures/box-arrow-in-up.svg' class='section-home-post-img' />
+            
+        </div>
+
+        <span class='section-home-span'>"Trouvez une nouvelle vie pour vos produits invendus ! Déposez-les ici et laissez les acheteurs potentiels fixer leur prix."</span>
+
+
+
+
+
+
+        <section class='section-home-last-product'>
+
+            <h2 class='section-home-subtitle'>Derniers ajouts de nos utilisateurs:</h2>
+
+
+
+
+            <div class='section-home-last-product-div-clone'>
+
+                <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
+                <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+
+            </div>
+
+
+            <div class='section-home-last-product-div'>
+
+
+
+
+                <div class='section-home-last-product-div-carousel'>
+
+                    <a *ngFor='let product of this.appService.getLastProductArray' class='section-home-last-product-div-anchor home' [routerLink]="['/product', product.product.product_id]">
+                        
+                        <div class='section-home-last-product-div-anchor-div'>
+
+                            <!-- img element if IMAGE or NOT -->
+
+                            <img *ngIf="product.photo.photo_photo_list == null" src='http://localhost:8000/pictures/no-image.svg' class='section-search-result-element-img no-image' />
+
+                            <img *ngIf="product.photo.photo_photo_list !== null" src='http://localhost:8000/uploads/pictures/{{ product.photo.photo_photo_list.split(",")[0] }}' class='section-search-result-element-img' />
+
+                            <!-- -->
+
+
+
+
+
+                            <!-- title -->
+
+                            <span *ngIf='product.product.product_name.length >= 25' class='section-search-result-element-span-title home'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1, 25) }}...</span>
+
+                            <span *ngIf='product.product.product_name.length < 25' class='section-search-result-element-span-title home'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1) }}</span>
+
+                            <!-- -->
+
+
+
+
+
+
+                            <!-- city-->
+
+                            <span class='section-search-result-element-span-city home'>{{ product.product.product_city.charAt(0).toUpperCase() + product.product.product_city.slice(1) }}</span>
+
+                            <!-- -->
+
+
+
+
+                            <!-- min offer -->
+                            
+                            <span class='section-search-result-element-span-offer-min'>Offre minimum: {{ product.offer[product['offer'].length - 1].offer_offerprice == null ? "Libre" : product.offer[product['offer'].length - 1].offer_offerprice + "€" }}</span>
+
+                            <!-- -->
+
+
+
+
+
+                            <!-- date -->
+
+                            <span class='section-search-result-element-span-datetime home'>{{ product.product.product_created_at }}</span>
+
+                            <!-- -->
+
+                        </div>
+
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+        </section>
+
+    </section>
+    
+</main>

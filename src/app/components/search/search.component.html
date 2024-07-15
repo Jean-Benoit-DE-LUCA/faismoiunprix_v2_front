@@ -1,0 +1,268 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-search'>
+
+
+        <div class='section-search-filter-button-div'>
+            <img class='section-search-filter-img' src='/assets/pictures/filter-icon.svg' (click)='handleClickFilter($event, "filter")'/>
+
+            <img class='section-search-sort-img' src='/assets/pictures/sort-down.svg' (click)='handleClickFilter($event, "sort")'/>
+        </div>
+
+
+
+
+        <!-- FILTER -->
+
+        <div class='section-search-filter-div'>
+
+
+            <button type='button' class='cross-filter' name='cross-filter' (click)='handleClickFilter($event, "filter")'>x</button>
+
+            <span class='section-search-filter-div-span-filter'>Filtres</span>
+
+            <button type='button' class='reset-filter' name='reset-filter' (click)='handleClickResetFilter($event)'>Réinitialiser</button>
+
+            <form class='section-search-filter-form' name='section-search-filter-form' (submit)='handleSubmitFilter($event)'>
+                <section class='section-search-filter-div-section'>
+
+
+
+
+                    
+
+                    <div class='section-search-filter-div-section-div-wrap'>
+                        <label for='search-filter-input-city' class='search-filter-label first'>Localisation:</label>
+                        <input type='text' class='search-filter-input-city' name='search-filter-input-city' id='search-filter-input-city' (keyup)='this.appService.handleKeyUpInputLength($event)'/>
+                    </div>
+
+
+                    <div class='section-search-filter-div-section-div-wrap'>
+                        <label for='search-filter-input-zip' class='search-filter-label first'>Code postal:</label>
+                        <input type='number' class='search-filter-input-zip' id='search-filter-input-zip' name='search-filter-input-zip' (keyup)='this.appService.handleKeyUpInputLength($event)' />
+                    </div>
+
+
+
+
+                    <div class='section-search-filter-div-section-div-wrap radius'>
+                        <label for='search-filter-input-radius' class='search-filter-label first'>Dans un rayon de:</label>
+
+                        <div class='search-filter-input-radius-wrap'>
+                            <input type='range' class='search-filter-input-radius' name='search-filter-input-radius' id='search-filter-input-radius' (input)='handleInputRangeRadius($event)' min='0' max='6' value='0' />
+
+                            <span class='search-filter-input-radius-span'>0km</span>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <div class='section-search-filter-div-section-div-wrap category'>
+                        <label for='search-filter-select-category' class='search-filter-label first'>Catégorie:</label>
+
+                        <div class='search-filter-input-category-wrap'>
+                            <select class='search-filter-select-category' name='search-filter-select-category' id='search-filter-select-category'>
+
+                                <option value='all'>Toutes</option>
+                                <option *ngFor='let category of this.appService.category' value='{{ category.id }}'>{{ this.appService.translateCategory(category.name) }}</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+                    <div class='section-search-filter-div-section-div-wrap offer'>
+                        <label for='search-filter-input-city' class='search-filter-label first'>Offre:</label>
+                        
+                        <div class='search-filter-input-delivery-wrap-div offer'>
+
+                            <div class='search-filter-input-offer-wrap'>
+                                <input type='number' class='search-filter-input-offer' name='search-filter-input-offer-min' id='search-filter-input-offer-min' placeholder='Min.'/>
+                                <img src='../../../assets/pictures/currency-euro.svg' class='img-currency-euro offer' />
+                            </div>
+
+                            <div class='search-filter-input-offer-wrap'>
+                            <input type='number' class='search-filter-input-offer' name='search-filter-input-offer-max' id='search-filter-input-offer-max' placeholder='Max.'/>
+                            <img src='../../../assets/pictures/currency-euro.svg' class='img-currency-euro offer' />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                    <div class='section-search-filter-div-section-div-wrap delivery'>
+                        <label class='search-filter-label first'>Accepte la livraison:</label>
+
+                        <div class='search-filter-input-delivery-wrap'>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-delivery-yes' class='search-filter-label'>Oui</label>
+                                <input type='radio' class='search-filter-input-delivery' name='search-filter-input-delivery' id='search-filter-input-delivery-yes' />
+                            </div>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-delivery-no' class='search-filter-label'>Non</label>
+                                <input type='radio' class='search-filter-input-delivery' name='search-filter-input-delivery' id='search-filter-input-delivery-no' />
+                            </div>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-delivery-all' class='search-filter-label'>Tous</label>
+                                <input type='radio' class='search-filter-input-delivery' name='search-filter-input-delivery' id='search-filter-input-delivery-all' checked />
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class='section-search-filter-div-section-div-wrap delivery'>
+                        <label class='search-filter-label first'>Produits récents (-48H):</label>
+
+                        <div class='search-filter-input-delivery-wrap'>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-new-yes' class='search-filter-label'>Oui</label>
+                                <input type='radio' class='search-filter-input-new' name='search-filter-input-new' id='search-filter-input-new-yes' />
+                            </div>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-new-no' class='search-filter-label'>Non</label>
+                                <input type='radio' class='search-filter-input-new' name='search-filter-input-new' id='search-filter-input-new-no' />
+                            </div>
+
+                            <div class='search-filter-input-delivery-wrap-div'>
+                                <label for='search-filter-input-new-all' class='search-filter-label'>Tous</label>
+                                <input type='radio' class='search-filter-input-new' name='search-filter-input-new' id='search-filter-input-new-all' checked />
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button type='submit' class='search-filter-button-submit' name='search-filter-button-submit'>Valider</button>
+
+                </section>
+
+            </form>
+
+        </div>
+
+        <!-- ------------------ -->
+
+
+
+
+
+        <!-- SORT SECTION -->
+
+        <div class='section-search-sort-div'>
+
+            <button type='button' class='cross-filter' name='cross-filter' (click)='handleClickFilter($event, "sort")'>x</button>
+
+            <form class='section-search-sort-div-choice-form'>
+
+                <span class='section-search-sort-div-choice-form-span-title'>Tri:</span>
+
+
+                <div class='section-search-sort-div-choice-form-div'>
+                    <label for='new'>Plus récents</label>
+                    <input type='radio' class='section-search-sort-div-choice-form-input' id='new' name='sort' value='new' (change)='handleChangeInputRadioSort($event)'/>
+                </div>
+
+                <div class='section-search-sort-div-choice-form-div'>
+                    <label for='old'>Plus anciens</label>
+                    <input type='radio' class='section-search-sort-div-choice-form-input' id='old' name='sort' value='old' (change)='handleChangeInputRadioSort($event)'/>
+                </div>
+
+                <div class='section-search-sort-div-choice-form-div'>
+                    <label for='cheap'>Offres croissantes</label>
+                    <input type='radio' class='section-search-sort-div-choice-form-input' id='cheap' name='sort' value='cheap' (change)='handleChangeInputRadioSort($event)'/>
+                </div>
+
+                <div class='section-search-sort-div-choice-form-div'>
+                    <label for='expensive'>Offres décroissantes</label>
+                    <input type='radio' class='section-search-sort-div-choice-form-input' id='expensive' name='sort' value='expensive' (change)='handleChangeInputRadioSort($event)'/>
+                </div>
+            </form>
+
+        </div>
+
+
+
+
+
+
+
+
+        <span class='section-search-result-span'>Résultats de la recherche "<span class='section-search-result-span-word'>{{ this.appService.searchWord }}</span>":</span>
+
+        <span class='section-search-result-span-count'>{{ this.appService.searchResultKept.length }} produits trouvés</span>
+
+        <section class='section-search-result'>
+
+            <a *ngFor='let element of this.appService.searchResultKeptSortOffer' routerLink='/product/{{ element.product.product_id }}' class='section-search-result-anchor'>
+
+                <div class='section-search-result-element'>
+
+
+                    <!-- img element if IMAGE or NOT -->
+
+                    <img *ngIf="element.photo.photo_photo_list == null" src='http://localhost:8000/pictures/no-image.svg' class='section-search-result-element-img no-image' />
+
+                    <img *ngIf="element.photo.photo_photo_list !== null" src='http://localhost:8000/uploads/pictures/{{ element.photo.photo_photo_list.split(",")[0] }}' class='section-search-result-element-img' />
+
+                    <!-- -->
+
+
+
+                    <span class='section-search-result-element-span-title search'>{{ element.product.product_name.charAt(0).toUpperCase() + element.product.product_name.slice(1) }}</span>
+
+                    <span class='section-search-result-element-span-city'>{{ element.product.product_city.charAt(0).toUpperCase() + element.product.product_city.slice(1) }}</span>
+
+                    <span class='section-search-result-element-span-delivery'>Livraison: {{ element.product.product_delivery == "false" ? "Non" :
+                                                                                            element.product.product_delivery == "true" ? "Oui" : ""}}</span>
+
+
+
+
+
+                    <span *ngIf='element.offer.length <= 1' class='section-search-result-element-span-offer'>Offre la plus élevée: Pas d'offre en cours</span>
+
+                    <span *ngIf='element.offer.length > 1' class='section-search-result-element-span-offer'>Offre la plus élevée: {{ element.max_offer + "€" }}</span>
+
+
+
+
+
+                    <span class='section-search-result-element-span-offer-min'>Offre minimum: {{ element.offer[element['offer'].length - 1].offer_offerprice == null ? "Libre" : element.offer[element['offer'].length - 1].offer_offerprice + "€" }}</span>
+
+                    <span class='section-search-result-element-span-datetime'>{{ element.product.product_created_at }}</span>
+                </div>
+            </a>
+
+
+
+
+        </section>
+
+    </section>
+
+
+</main>

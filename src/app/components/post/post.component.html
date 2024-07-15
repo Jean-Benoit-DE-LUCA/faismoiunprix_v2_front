@@ -1,0 +1,221 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-post'>
+
+        <h2 *ngIf='this.allActive == false'class='section-register-title'>Déposer un produit</h2>
+        <h2 *ngIf='this.allActive == true'class='section-register-title'>On récapitule</h2>
+
+
+            <button *ngIf='this.allActive == true' type='button' class='back-post-button overview' name='back-post-button-overview' (click)='handleClickBackSectionButton($event)'>
+                <img src='/assets/pictures/arrow-left-short.svg' class='back-post-button-arrow-img' />
+                <span class='section-post-title-span'>Modifier</span>
+            </button>
+
+
+        <!-- TITLE PART -->
+
+        <div class='{{this.allActive ? "all-active" : ""}} section-post-title-div on' id='title'>
+
+            <span class='section-post-title-span'>Bon ok, je suis invendu, mais je n'ai pas fini ma carrière!</span>
+
+            <span class='section-post-title-span'>Donne moi un titre:</span>
+
+            <input type='text' class='section-post-title-input' id='section-post-title-input' name='section-post-title-input' placeholder='4 caractères minimum' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' />
+
+
+
+
+            <span class='section-post-title-span'>Et une catégorie:</span>
+
+            <select class='section-post-title-select-category' name='section-post-title-select-category' id='section-post-title-select-category' [disabled]='this.allActive ? true : false' (change)='this.appService.handleKeyUpInputLength($event)' >
+
+                <option value="-" selected>-</option>
+                <option *ngFor='let category of this.appService.category' value='{{ category.id }}'>{{ this.appService.translateCategory(category.name) }}</option>
+
+            </select>
+            <!-- make category part select HERE -->
+
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-title' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+            
+        </div>
+
+
+
+
+
+
+        <!-- DESCRIPTION PART -->
+
+        <div class='{{this.allActive ? "all-active" : ""}} section-post-description-div off' id='description'>
+
+            <span class='section-post-title-span'>Allez, maintenant, parle de moi!</span>
+
+            <button *ngIf='this.allActive == false' type='button' class='back-post-button' name='back-post-button' (click)='handleClickBackSectionButton($event)'>
+                <img src='/assets/pictures/arrow-left-short.svg' class='back-post-button-arrow-img' />
+            </button>
+
+            <textarea class='section-post-description-textarea' name='section-post-description-textarea' [readonly]='this.allActive ? true : false'></textarea>
+
+
+
+
+
+
+            <span class='section-post-title-span'>Où me trouver?</span>
+
+            <input type='text' class='section-post-description-city-input' id='section-post-description-city-input' name='section-post-description-city-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' placeholder='Ville'/>
+
+            <input type='number' class='section-post-description-zip-input' id='section-post-description-zip-input' name='section-post-description-zip-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' placeholder='Code postal'/>
+
+
+
+
+
+
+            <span class='section-post-title-span'>Où me joindre?</span>
+
+            <input type='number' class='section-post-description-phone-input' id='section-post-description-phone-input' name='section-post-description-phone-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.phone }}'/>
+
+            <input type='email' class='section-post-description-email-input' id='section-post-description-email-input' name='section-post-description-email-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.email }}'/>
+
+
+
+
+
+            <span class='section-post-title-span'>Je suis livrable?</span>
+
+
+            <div class='{{this.allActive ? "all-active" : ""}} section-post-description-delivery-wrap'>
+                <div class='section-post-description-delivery-wrap-label-input'>
+                    <label for='section-post-description-delivery-yes' class='section-post-description-delivery-label'>Oui</label>
+                    <input type='radio' class='section-post-description-delivery' id='section-post-description-delivery-yes' name='section-post-description-delivery' />
+                </div>
+
+
+
+                <div class='section-post-description-delivery-wrap-label-input'>
+                    <label for='section-post-description-delivery-no' class='section-post-description-delivery-label'>Non</label>
+
+                    <input type='radio' class='section-post-description-delivery' id='section-post-description-delivery-no' name='section-post-description-delivery' checked />
+
+
+                </div>
+            </div>
+
+
+
+
+
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-description' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+
+        </div>
+
+
+
+
+
+
+        <!-- PICTURE PART-->
+
+        <div class='{{this.allActive ? "all-active" : ""}} section-post-picture-div off' id='picture'>
+
+            <span class='section-post-title-span'>On ne se cache plus, quelques photos!</span>
+
+            <button *ngIf='this.allActive == false' type='button' class='back-post-button' name='back-post-button' (click)='handleClickBackSectionButton($event)'>
+                <img src='/assets/pictures/arrow-left-short.svg' class='back-post-button-arrow-img' />
+            </button>
+
+            <section class='section-post-picture-insert-div'>
+                
+                <div class='section-post-picture-element'>
+                    
+                    <a class='anchor-input-file' id='anchor-input-file-1' href='' target='_blank'>
+                        <img src='http://localhost:8000/pictures/no-image.svg' class='section-post-picture-insert-element-img no-image'/>
+                    </a>
+
+                    <button *ngIf='this.allActive == false' type='button' class='button-post-picture-cross' name='button-post-picture-cross' (click)='handleClickCrossPicture($event)'>X</button>
+                    
+                    <div *ngIf='this.allActive == false' class='add-picture-img-wrap-div'>
+                        <img src='/assets/pictures/box-arrow-in-up.svg' class='add-picture-img' />
+                        <label for='add-picture-input-file-1' class='add-picture-label'></label>
+                        <input type='file' class='add-picture-input-file' name='add-picture-input-file-1' id='add-picture-input-file-1' (change)='handleChangeInputFile($event)' (click)='handleClickInputFile($event)'/>
+                    </div>
+    
+                </div>
+
+                <div class='section-post-picture-element'>
+                    
+                    <a class='anchor-input-file' id='anchor-input-file-2' href='' target='_blank'>
+                        <img src='http://localhost:8000/pictures/no-image.svg' class='section-post-picture-insert-element-img no-image'/>
+                    </a>
+
+                    <button *ngIf='this.allActive == false' type='button' class='button-post-picture-cross' name='button-post-picture-cross' (click)='handleClickCrossPicture($event)'>X</button>
+
+                    <div *ngIf='this.allActive == false' class='add-picture-img-wrap-div'>
+                        <img src='/assets/pictures/box-arrow-in-up.svg' class='add-picture-img' />
+                        <label for='add-picture-input-file-2' class='add-picture-label'></label>
+                        <input type='file' class='add-picture-input-file' name='add-picture-input-file-2' id='add-picture-input-file-2' (change)='handleChangeInputFile($event)' (click)='handleClickInputFile($event)'/>
+                    </div>
+    
+                </div>
+
+                <div class='section-post-picture-element'>
+                    
+                    <a class='anchor-input-file' id='anchor-input-file-3' href='' target='_blank'>
+                        <img src='http://localhost:8000/pictures/no-image.svg' class='section-post-picture-insert-element-img no-image'/>
+                    </a>
+
+                    <button *ngIf='this.allActive == false' type='button' class='button-post-picture-cross' name='button-post-picture-cross' (click)='handleClickCrossPicture($event)'>X</button>
+
+                    <div *ngIf='this.allActive == false' class='add-picture-img-wrap-div'>
+                        <img src='/assets/pictures/box-arrow-in-up.svg' class='add-picture-img' />
+                        <label for='add-picture-input-file-3' class='add-picture-label'></label>
+                        <input type='file' class='add-picture-input-file' name='add-picture-input-file-3' id='add-picture-input-file-3' (change)='handleChangeInputFile($event)' (click)='handleClickInputFile($event)'/>
+                    </div>
+    
+                </div>
+
+            </section>
+
+
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-picture' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+
+        </div>
+
+
+
+
+
+
+        <!-- OFFER PART -->
+
+        <div class='{{this.allActive ? "all-active" : ""}} section-post-offer-div off' id='offer'>
+
+            <span class='section-post-title-span'>On choisit un prix de départ ... ou pas!</span>
+
+            <button *ngIf='this.allActive == false' type='button' class='back-post-button' name='back-post-button' (click)='handleClickBackSectionButton($event)'>
+                <img src='/assets/pictures/arrow-left-short.svg' class='back-post-button-arrow-img' />
+            </button>
+
+            <div class='section-post-offer-input-wrap'>
+                <input type='number' class='section-post-offer-input' name='section-post-offer-input' id='section-post-offer-input' placeholder='Facultatif' [readonly]='this.allActive ? true : false'/>
+                <img src='/assets/pictures/currency-euro.svg' class='img-currency-euro' />
+            </div>
+
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-offer' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+
+            <!-- if all active -->
+
+            <button *ngIf='this.allActive == true' type='button' class='button-post-title' name='button-post-offer-post' (click)='handleClickButtonNextPost($event)'>Déposer</button>
+
+            <!-- -- -->
+
+        </div>
+
+    </section>
+    
+</main>

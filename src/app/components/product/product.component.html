@@ -1,0 +1,520 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-product'>
+
+        <!-- if NO image -->
+
+        <div *ngIf='productData[0] !== undefined' class='section-product-carousel-wrap-wrap'>
+
+                
+
+                <div *ngIf='productData[0]["photo"]["photo_photo_list"] == null' class='section-product-carousel no-image'>
+
+                    <img class='section-product-carousel-arrow prev inactive' src='../../../assets/pictures/arrow-prev.svg' />
+                    <img class='section-product-carousel-arrow next inactive' src='../../../assets/pictures/arrow-next.svg' />
+
+                    <img class='section-product-carousel-img no-image' src='http://localhost:8000/pictures/no-image.svg' />
+
+                </div>
+
+
+
+
+
+
+                <div *ngIf='productData[0]["photo"]["photo_photo_list"] == null' class='section-product-carousel-data-div'>
+
+                    <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-title'>
+                        <span class='section-search-result-element-span-title-span'>
+                            {{ productData[0]['product']['product_name'].charAt(0).toUpperCase() + productData[0]['product']['product_name'].slice(1) }}
+                        </span>
+                    </span>
+    
+                    <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-city'>{{ productData[0]['product']['product_city'].charAt(0).toUpperCase() + productData[0]['product']['product_city'].slice(1) }}</span>
+    
+                    <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-delivery'>Livraison: {{ productData[0]['product']['product_delivery'] == "false" ? "Non" :
+                                                                                            productData[0]['product']['product_delivery'] == "true" ? "Oui" : ""}}</span>
+                    
+    
+                    <div *ngIf='productData[0] !== undefined' class='section-search-result-element-div-product-owner'>
+    
+                        <span class='section-search-result-element-description-span'>Contact</span>
+        
+                        <span class='section-search-result-element-div-product-owner-span-user'>Mis en ligne par: {{ productData[0]['product']['user_offer_firstname'].charAt(0).toUpperCase() + productData[0]['product']['user_offer_firstname'].slice(1) }}</span>
+        
+                        <button *ngIf='productData[0]["product"]["product_user_id"] !== this.appService.user.id' type='button' class='section-search-result-element-div-product-owner-button-messaging' (click)='handleClickMessageButton($event)'>Messagerie</button>
+        
+                        <button type='button' class='section-search-result-element-div-product-owner-button-phone' (click)='handleClickPhoneButton($event)'>
+                            <span class='section-search-result-element-div-product-owner-button-phone-span'>Téléphone</span>
+                            <span class='section-search-result-element-div-product-owner-button-phone-span-phone'>{{ productData[0]['product']['product_phone'] }}</span>
+                        </button>
+                    </div>
+    
+                    
+        
+                    <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-datetime'>{{ productData[0]['product']['product_created_at'] }}</span>
+    
+                    
+                </div>
+
+        </div>
+
+        <!-- -->
+
+
+
+
+
+        <!-- if image -->
+
+        <div *ngIf='productData[0] !== undefined' class='section-product-carousel-wrap-wrap'>
+
+            <div *ngIf='productData[0]["photo"]["photo_photo_list"] !== null' class='section-product-carousel-wrap'>
+
+                <img class='section-product-carousel-arrow prev' src='../../../assets/pictures/arrow-prev.svg' (click)='handleClickArrowCarousel("prev")'/>
+                <img class='section-product-carousel-arrow next' src='../../../assets/pictures/arrow-next.svg' (click)='handleClickArrowCarousel("next")'/>
+
+                <div *ngIf='productData[0]["photo"]["photo_photo_list"] !== null' class='section-product-carousel'>
+
+                    
+
+                    <a *ngFor='let image of productData[0]["photo"]["photo_photo_list"].split(",")' href='http://localhost:8000/uploads/pictures/{{ image }}' class='section-product-carousel-anchor' target='_blank'>
+
+                        <img class='section-product-carousel-img' src='http://localhost:8000/uploads/pictures/{{ image }}' />
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div *ngIf='productData[0]["photo"]["photo_photo_list"] !== null' class='section-product-carousel-data-div'>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-title'>
+                    <span class='section-search-result-element-span-title-span'>
+                        {{ productData[0]['product']['product_name'].charAt(0).toUpperCase() + productData[0]['product']['product_name'].slice(1) }}
+                    </span>
+                </span>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-city'>{{ productData[0]['product']['product_city'].charAt(0).toUpperCase() + productData[0]['product']['product_city'].slice(1) }}</span>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-delivery'>Livraison: {{ productData[0]['product']['product_delivery'] == "false" ? "Non" :
+                                                                                        productData[0]['product']['product_delivery'] == "true" ? "Oui" : ""}}</span>
+                
+
+                <div *ngIf='productData[0] !== undefined' class='section-search-result-element-div-product-owner'>
+
+                    <span class='section-search-result-element-description-span'>Contact</span>
+    
+                    <span class='section-search-result-element-div-product-owner-span-user'>Mis en ligne par: {{ productData[0]['product']['user_offer_firstname'].charAt(0).toUpperCase() + productData[0]['product']['user_offer_firstname'].slice(1) }}</span>
+    
+                    <button *ngIf='productData[0]["product"]["product_user_id"] !== this.appService.user.id' type='button' class='section-search-result-element-div-product-owner-button-messaging' (click)='handleClickMessageButton($event)'>Messagerie</button>
+    
+                    <button type='button' class='section-search-result-element-div-product-owner-button-phone' (click)='handleClickPhoneButton($event)'>
+                        <span class='section-search-result-element-div-product-owner-button-phone-span'>Téléphone</span>
+                        <span class='section-search-result-element-div-product-owner-button-phone-span-phone'>{{ productData[0]['product']['product_phone'] }}</span>
+                    </button>
+                </div>
+
+                
+    
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-datetime'>{{ productData[0]['product']['product_created_at'] }}</span>
+
+                
+            </div>
+
+
+        </div>
+
+        <!-- -->
+
+
+        <div class='section-search-result-element'>
+
+            <div class='section-search-result-element-div-wrap'>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-title'>
+                    <span class='section-search-result-element-span-title-span'>
+                        {{ productData[0]['product']['product_name'].charAt(0).toUpperCase() + productData[0]['product']['product_name'].slice(1) }}
+                    </span>
+                </span>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-city'>{{ productData[0]['product']['product_city'].charAt(0).toUpperCase() + productData[0]['product']['product_city'].slice(1) }}</span>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-delivery'>Livraison: {{ productData[0]['product']['product_delivery'] == "false" ? "Non" :
+                                                                                        productData[0]['product']['product_delivery'] == "true" ? "Oui" : ""}}</span>
+            </div>
+
+
+
+
+            <!-- map -->
+
+            <div id='map-wrap'>
+
+                <div id='map'>
+
+                </div>
+            
+            </div>
+
+
+            <!-- -->
+
+
+
+
+            <!-- description -->
+
+            <div *ngIf='productData[0] !== undefined' class='section-search-result-element-description-div'>
+
+                <span class='section-search-result-element-description-span'>Description</span>
+
+                <p class='section-search-result-element-description-p'>{{ productData[0]['product']['product_description'] }}</p>
+
+            </div>
+
+            <!-- -->
+
+            <div class='section-search-result-element-div-wrap'>
+
+                <span *ngIf='productData[0] !== undefined' class='section-search-result-element-span-datetime'>{{ productData[0]['product']['product_created_at'] }}</span>
+
+            </div>
+
+
+
+
+                <div class='section-search-result-element-div-wrap'>
+
+                    <div *ngIf='productData[0] !== undefined' class='section-search-result-element-div-product-owner'>
+
+                        <span class='section-search-result-element-description-span'>Contact</span>
+
+                        <span class='section-search-result-element-div-product-owner-span-user'>Mis en ligne par: {{ productData[0]['product']['user_offer_firstname'].charAt(0).toUpperCase() + productData[0]['product']['user_offer_firstname'].slice(1) }}</span>
+
+                        <button *ngIf='productData[0]["product"]["product_user_id"] !== this.appService.user.id' type='button' class='section-search-result-element-div-product-owner-button-messaging' (click)='handleClickMessageButton($event)'>Messagerie</button>
+
+                        <button type='button' class='section-search-result-element-div-product-owner-button-phone' (click)='handleClickPhoneButton($event)'>
+                            <span class='section-search-result-element-div-product-owner-button-phone-span'>Téléphone</span>
+                            <span class='section-search-result-element-div-product-owner-button-phone-span-phone'>{{ productData[0]['product']['product_phone'] }}</span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            <div *ngIf='productData[0] !== undefined' class='section-search-result-element-offer-table-div'>
+
+                <span class='section-search-result-element-span-offer'>Les offres reçues:</span>
+
+                <table class='section-search-result-element-offer-table'>
+                    <thead>
+                        <tr>
+                            <th>Offreur:</th>
+                            <th>Montant de l'offre:</th>
+                            <th>Heure de l'offre:</th>
+                        </tr>
+                    </thead>
+
+
+                    <!-- if NO min offer -->
+
+                    <tbody *ngIf='productData[0]["offer"].slice(0, productData[0]["offer"].length - 1).length == 0'>
+                            
+                        <tr>
+                            <td></td>
+
+                            <td></td>
+
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+
+                    <!-- -->
+
+
+
+
+
+
+
+                    <!-- if more than one offer -->
+
+                    <tbody *ngIf='productData[0]["offer"].slice(0, productData[0]["offer"].length - 1).length > 0'>
+                            
+                        <tr *ngFor='let offer of productData[0]["offer"].slice(0, productData[0]["offer"].length - 1)'>
+
+                            <td class='section-search-result-element-offer-table-td' [ngClass]='offer.offer_status'>{{ offer.user_offer_firstname }}</td>
+
+
+                            <td class='section-search-result-element-offer-table-td' [ngClass]='offer.offer_status'>{{ offer.offer_offerprice }} €</td>
+
+
+                            <td class='section-search-result-element-offer-table-td' [ngClass]='offer.offer_status'>{{ offer.offer_created_at }}</td>
+                        </tr>
+
+                    </tbody>
+
+                    <!-- -->
+
+
+
+                    
+
+                </table>
+
+            </div>
+
+
+
+
+            <!-- status section -->
+
+            <div class='section-search-result-element-offer-status-div'>
+
+                <span class='section-search-result-element-offer-status-div-span'>Légende</span>
+
+                <div class='section-search-result-element-offer-status-div-div'>
+
+                    <div class='section-search-result-element-offer-status-div-div-div-color'>
+
+                        <div class='section-search-result-element-offer-status-div-div-div-color-div pending'></div>
+                        <div class='section-search-result-element-offer-status-div-div-div-color-div denied'></div>
+                        <div class='section-search-result-element-offer-status-div-div-div-color-div accepted'></div>
+
+                    </div>
+
+                    <div class='section-search-result-element-offer-status-div-div-div-label'>
+
+                        <span class='section-search-result-element-offer-status-div-div-div-span'>Offre non traitée</span>
+                        <span class='section-search-result-element-offer-status-div-div-div-span'>Offre refusée</span>
+                        <span class='section-search-result-element-offer-status-div-div-div-span'>Offre acceptée</span>
+                        
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- OFFER SECTION -->
+
+            <div *ngIf='productData[0] !== undefined && !isValidObjectOffer(offerAccepted)' class='section-search-result-element-make-offer-div'>
+
+                <form class='form-offer' name='form-offer' method='POST' (submit)='handleSubmitOffer($event)'>
+
+                    <label for='section-search-result-element-make-offer-div-input' class='section-search-result-element-make-offer-div-label'>Faire une offre de:</label>
+
+
+
+
+
+                    <!-- offer min -->
+
+                    <span *ngIf='productData[0]["offer"][productData[0]["offer"].length - 1]["offer_offerprice"] !== null' class='section-search-result-element-make-offer-div-span'>Offre minimum: 
+                        <span class='section-search-result-element-make-offer-div-span-number'>{{ productData[0]["offer"][productData[0]["offer"].length - 1]["offer_offerprice"] }} €</span>
+                        
+                        <span *ngIf='productData[0]["offer"][productData[0]["offer"].length - 1]["offer_created_at"] !== productData[0]["offer"][productData[0]["offer"].length - 1]["offer_updated_at"]' class='section-search-result-element-make-offer-div-span-number-update'>(Modifiée le {{ productData[0]["offer"][productData[0]["offer"].length - 1]["offer_updated_at"] }})</span>
+                    </span>
+
+
+
+                    <span *ngIf='productData[0]["offer"][productData[0]["offer"].length - 1]["offer_offerprice"] == null' class='section-search-result-element-make-offer-div-span'>Offre minimum: 
+                        <span class='section-search-result-element-make-offer-div-span-number'>Libre</span>
+                        
+                        <span *ngIf='productData[0]["offer"][productData[0]["offer"].length - 1]["offer_created_at"] !== productData[0]["offer"][productData[0]["offer"].length - 1]["offer_updated_at"]' class='section-search-result-element-make-offer-div-span-number-update'>(Modifiée le {{ productData[0]["offer"][productData[0]["offer"].length - 1]["offer_updated_at"] }})</span>
+                    </span>
+
+                    <!---->
+
+
+
+
+
+                    <input type='number' step='.01' class='section-search-result-element-make-offer-div-input' id='section-search-result-element-make-offer-div-input' name='section-search-result-element-make-offer-div-input' />
+
+                    <button type='submit' class='button-submit-offer' name='button-submit-offer'>Valider</button>
+
+                </form>
+
+            </div>
+
+
+
+
+            <div *ngIf='productData[0] !== undefined && isValidObjectOffer(offerAccepted)' class='div-accepted-offer'>
+
+
+                <div class='div-accepted-offer-div'>
+
+                    <span class='div-accepted-offer-div-span'>Offre de 
+                        <span class='div-accepted-offer-div-span-number'>{{ offerAccepted.offer_offerprice }} €</span>
+                        acceptée par
+                        <span class='div-accepted-offer-div-span-owner-firstname'>{{ productData[0]['product']['user_offer_firstname'] }}</span>
+                    </span>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+            <!-- HR LINE-->
+
+            <hr class='section-search-result-element-line-break'>
+
+
+
+            <!-- OTHER OFFER -->
+
+            <div *ngIf='productData[0] !== undefined' class='section-search-result-element-other-product-div'>
+
+                <span class='section-search-result-element-span-offer'>Plus d'offres de {{ productData[0]['product']['user_offer_firstname'].charAt(0).toUpperCase() + productData[0]['product']['user_offer_firstname'].slice(1) }}:</span>
+
+                <!-- HOME CAROUSEL -->
+
+                <section class='section-home-last-product'>
+        
+        
+        
+                    <div class='section-home-last-product-div-clone'>
+        
+                        <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
+                        <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+        
+                    </div>
+        
+        
+                    <div class='section-home-last-product-div'>
+        
+        
+        
+        
+                        <div class='section-home-last-product-div-carousel'>
+        
+                            <!-- <a *ngFor='let product of this.appService.getOtherProductArrayUser' class='section-home-last-product-div-anchor home' [routerLink]="['/product', product.product.product_id]" (click)='handleClickProductLink($event), product.product.product_id'> -->
+
+                            <a *ngFor='let product of this.appService.getOtherProductArrayUser' class='section-home-last-product-div-anchor home' (click)='handleClickProductLink($event, product.product.product_id)'>
+                                
+                                <div class='section-home-last-product-div-anchor-div'>
+        
+                                    <!-- img element if IMAGE or NOT -->
+        
+                                    <img *ngIf="product.photo.photo_photo_list == null" src='http://localhost:8000/pictures/no-image.svg' class='section-search-result-element-img no-image' />
+        
+                                    <img *ngIf="product.photo.photo_photo_list !== null" src='http://localhost:8000/uploads/pictures/{{ product.photo.photo_photo_list.split(",")[0] }}' class='section-search-result-element-img' />
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+                                    <!-- title -->
+        
+                                    <span *ngIf='product.product.product_name.length >= 25' class='section-search-result-element-span-title home'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1, 25) }}...</span>
+        
+                                    <span *ngIf='product.product.product_name.length < 25' class='section-search-result-element-span-title home'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1) }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+        
+                                    <!-- city-->
+        
+                                    <span class='section-search-result-element-span-city home'>{{ product.product.product_city.charAt(0).toUpperCase() + product.product.product_city.slice(1) }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+                                    <!-- min offer -->
+                                    
+                                    <span class='section-search-result-element-span-offer-min'>Offre minimum: {{ product.offer[product['offer'].length - 1].offer_offerprice == null ? "Libre" : product.offer[product['offer'].length - 1].offer_offerprice + "€" }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+                                    <!-- date -->
+        
+                                    <span class='section-search-result-element-span-datetime home'>{{ product.product.product_created_at }}</span>
+        
+                                    <!-- -->
+        
+                                </div>
+        
+        
+                            </a>
+        
+                        </div>
+        
+                    </div>
+        
+        
+        
+                </section>
+
+                <!-- -->
+
+            </div>
+
+        </div>
+
+
+
+    </section>
+
+
+    <!-- section messaging -->
+
+    <section *ngIf='productData[0] !== undefined' class='section-myoffer-section-specific-offer'>
+
+        <button type='button' class='cross-filter-offer' name='cross-filter-offer' (click)='handleClickCrossOffer($event)'>x</button>
+
+        <span class='product-span-contact'>Contacter {{ productData[0]["product"]["user_offer_firstname"] }}</span>
+
+        <form class='form-product-contact' name='form-product-contact'>
+        
+            <textarea class='product-textarea-contact' name='product-textarea-contact' placeholder='Ecrivez votre message...' (keyup)='this.appService.handleKeyUpInputLength($event)'></textarea>
+
+            <button class='button-submit-message' name='button-submit-message' (click)='handleClickSendMessage($event)'>Envoyer</button>
+
+        </form>
+
+
+
+
+
+    </section>
+</main>

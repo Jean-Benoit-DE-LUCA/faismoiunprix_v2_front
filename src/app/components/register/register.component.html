@@ -1,0 +1,50 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-register'>
+
+        <h2 class='section-register-title'>Inscription</h2>
+
+        <form class='section-register-form' name='section-register-form' (submit)="registerFunc($event)">
+
+            <div class='register-label-input-wrap'>
+                <label for='register-name' class='register-label'>Nom:</label>
+                <input type='text' class='register-name' id='register-name' name='register-name' />
+            </div>
+
+            <div class='register-label-input-wrap'>
+                <label for='register-firstname' class='register-label'>Prénom:</label>
+                <input type='text' class='register-firstname' id='register-firstname' name='register-firstname' />
+            </div>
+
+            <div class='register-label-input-wrap'>
+                <label for='register-email' class='register-label'>Email:</label>
+                <input type='email' class='register-email' id='register-email' name='register-email' />
+            </div>
+
+            <div class='register-label-input-wrap'>
+                <label for='register-phone' class='register-label'>Téléphone:</label>
+                <input type='number' class='register-phone' id='register-phone' name='register-phone' />
+            </div>
+
+            <div class='register-label-input-wrap'>
+                <label for='register-password' class='register-label'>Mot de passe:</label>
+                <input type='password' class='register-password' id='register-password' name='register-password' autocomplete="off"/>
+            </div>
+
+            <div class='register-label-input-wrap'>
+                <label for='register-password-confirmation' class='register-label'>Confirmer:</label>
+                <input type='password' class='register-password-confirmation' id='register-password-confirmation' name='register-password-confirmation' autocomplete="off"/>
+            </div>
+
+            <button type='submit' class='register-button-submit' name='register-button-submit'>S'inscrire</button>
+
+        </form>
+
+    </section>
+
+
+</main>

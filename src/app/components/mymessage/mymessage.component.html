@@ -1,0 +1,106 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-mymessage'>
+
+        <h2 class='section-register-title'>Mes messages</h2>
+
+        <form class='section-mymessage-form' name='section-mymessage-form' method='POST'>
+
+            <div class='section-mymessage-div-wrap'>
+                <label for='section-mymessage-select-product' class='section-mymessage-label-select'>Produit:</label>
+                <select class='section-mymessage-select-product' name='section-mymessage-select-product' id='section-mymessage-select-product' (change)='handleChangeSelectProduct($event)'>
+
+                    <option value='-'>-</option>
+                    
+                    <option *ngFor='let product of productMessageObjKeys' value='{{ product }}'>{{ product }}
+                        <span *ngIf='!productMessageEnvelope[product]' class='section-mymessage-select-product-option-span'>&#x2709;</span>
+                    </option>
+                </select>
+            </div>
+
+
+            <div class='section-mymessage-div-wrap user'>
+                <label for='section-mymessage-select-user' class='section-mymessage-label-select'>Utilisateur:</label>
+
+                <div class='section-mymessage-div-wrap-select-wrap'>
+                <select class='section-mymessage-select-user' name='section-mymessage-select-user' id='section-mymessage-select-user' (change)='handleChangeSelectUserMessage($event)'>
+
+                    <option value='-'>-</option>
+                </select>
+
+                <button type='button' class='button-hide-conversation' name='button-hide-conversation' (click)='handleClickHideConversation($event)'>X</button>
+                </div>
+            </div>
+
+
+
+
+
+            <div class='specific-offer-div-wrap-div'>
+
+
+                <div class='specific-offer-div-messaging'>
+
+
+
+                    <!-- fake mess -->
+
+                    <div *ngFor='let message of this.appService.counterFakeMessage(5); let i = index' class='specific-offer-div-messaging-div-wrap-fake'>
+
+                        <span class='specific-offer-div-messaging-span-user'>FakeUser</span>
+
+                        <span class='specific-offer-div-messaging-span-message'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt ducimus nisi autem illo explicabo, est odio tempore sunt temporibus optio.</span>
+
+                        <span class='specific-offer-div-messaging-span-datetime'>{{ this.appService.getCurrentDateTime() }}</span>
+
+                    </div>
+
+                    <!-- -->
+
+
+
+
+
+
+
+                    <!--<div *ngFor='let message of offerSpecificMessage' class='specific-offer-div-messaging-div-wrap'>
+
+                        <span class='specific-offer-div-messaging-span-user'>{{ message['user_message_firstname'].charAt(0).toUpperCase() + message['user_message_firstname'].slice(1) }}:</span>
+
+                        <span class='specific-offer-div-messaging-span-message'>{{ message['message_message'] }}</span>
+
+                        <span class='specific-offer-div-messaging-span-datetime'>{{ message['message_created_at'] }}</span>
+
+                        <span class='specific-offer-div-messaging-span-message-id-hidden' [attr.data-message-id]='message["message_id"]'></span>
+
+                    </div>-->
+
+
+
+                </div>
+
+                <div class='div-wrap-send-message pending'>
+
+                    <input type='text' class='specific-offer-input-messaging' id='specific-offer-input-messaging' name='specific-offer-input-messaging' (keyup)='this.appService.handleKeyUpInputLength($event)'/>
+
+                    <div class='specific-offer-button-submit-messaging-wrap'>
+                        <button type='submit' class='specific-offer-button-submit-messaging' name='specific-offer-button-submit-messaging' (click)='handleClickSendMessage($event)'>Envoyer</button>
+                    </div>
+
+                </div>
+
+
+            
+            </div>
+
+
+
+        </form>
+
+    </section>
+
+</main>

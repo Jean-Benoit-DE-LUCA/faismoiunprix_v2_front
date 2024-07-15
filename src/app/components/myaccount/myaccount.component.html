@@ -1,0 +1,125 @@
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-myaccount'>
+
+        <h2 class='section-register-title'>Mon compte</h2>
+
+
+
+        <section class='section-myaccount-mydata'>
+
+            <h2 class='section-subtitle'>Modifier mes informations d'utilisateur:</h2>
+
+            <section class='section-myaccount-mydata-section-update'>
+        
+                <form class='section-register-form' name='section-register-form' (submit)='handleUpdateUserData($event)'>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-name' class='register-label'>Nom:</label>
+                        <input type='text' class='register-name' id='register-name' name='register-name' value='{{ this.appService.user.name }}'/>
+                    </div>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-firstname' class='register-label'>Prénom:</label>
+                        <input type='text' class='register-firstname' id='register-firstname' name='register-firstname' value='{{ this.appService.user.firstname }}'/>
+                    </div>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-email' class='register-label'>Email:</label>
+                        <input type='email' class='register-email' id='register-email' name='register-email' value='{{ this.appService.user.email }}'/>
+                    </div>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-phone' class='register-label'>Téléphone:</label>
+                        <input type='number' class='register-phone' id='register-phone' name='register-phone' value='{{ this.appService.user.phone }}'/>
+                    </div>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-password' class='register-label'>Mot de passe:</label>
+                        <input type='password' class='register-password' id='register-password' name='register-password' autocomplete="off"/>
+                    </div>
+        
+                    <div class='register-label-input-wrap'>
+                        <label for='register-password-confirmation' class='register-label'>Confirmer:</label>
+                        <input type='password' class='register-password-confirmation' id='register-password-confirmation' name='register-password-confirmation' autocomplete="off"/>
+                    </div>
+        
+                    <button type='submit' class='register-button-submit' name='register-button-submit'>Modifier</button>
+        
+                </form>
+        
+            </section>
+
+
+        </section>
+
+
+
+
+
+
+
+
+
+        <section class='section-myaccount-product'>
+
+            <h2 class='section-subtitle'>Gérer mes produits:</h2>
+
+            <section class='section-product-list'>
+
+                <a *ngFor='let element of productArray' routerLink='/myaccount/product/edit/{{ element.product_id }}' class='section-search-result-anchor'>
+    
+                    <div class='section-search-result-element'>
+    
+    
+                        <!-- img element if IMAGE or NOT -->
+    
+                        <img *ngIf="element.photo_photo_list == null" src='http://localhost:8000/pictures/no-image.svg' class='section-search-result-element-img no-image' />
+    
+                        <img *ngIf="element.photo_photo_list !== null" src='http://localhost:8000/uploads/pictures/{{ element.photo_photo_list.split(",")[0] }}' class='section-search-result-element-img' />
+    
+                        <!-- -->
+    
+    
+    
+                        <span class='section-search-result-element-span-title search'>{{ element.product_name.charAt(0).toUpperCase() + element.product_name.slice(1) }}</span>
+    
+                        <span class='section-search-result-element-span-city'>{{ element.product_city.charAt(0).toUpperCase() + element.product_city.slice(1) }}</span>
+    
+                        <span class='section-search-result-element-span-delivery'>Livraison: {{ element.product_delivery == "false" ? "Non" :
+                                                                                                element.product_delivery == "true" ? "Oui" : ""}}</span>
+    
+    
+    
+    
+    
+                        <!-- <span *ngIf='element.offer.length <= 1' class='section-search-result-element-span-offer'>Offre la plus élevée: Pas d'offre en cours</span>
+    
+                        <span *ngIf='element.offer.length > 1' class='section-search-result-element-span-offer'>Offre la plus élevée: {{ element.offer[0].offer_offerprice + "€" }}</span> -->
+    
+    
+    
+    
+    
+                        <!-- <span class='section-search-result-element-span-offer-min'>Offre minimum: {{ element.offer[element['offer'].length - 1].offer_offerprice == null ? "Libre" : element.offer[element['offer'].length - 1].offer_offerprice + "€" }}</span>
+    
+                        <span class='section-search-result-element-span-datetime'>{{ element.product.product_created_at }}</span> -->
+                    </div>
+                </a>
+    
+    
+    
+    
+            </section>
+
+
+
+        </section>
+
+    </section>
+    
+</main>

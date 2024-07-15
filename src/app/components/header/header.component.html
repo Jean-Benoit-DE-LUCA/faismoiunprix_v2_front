@@ -1,0 +1,190 @@
+<header class='header'>
+
+    <!-- NAV START -->
+
+    <nav class='nav'>
+
+        <ul class='nav-ul'>
+
+            <a routerLink='/' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Accueil
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Accueil
+                </li>
+            </a>
+
+            <a routerLink='/register' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    S'inscrire
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    S'inscrire
+                </li>
+            </a>
+
+            <a routerLink='/search' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Rechercher
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Rechercher
+                </li>
+            </a>
+
+
+            <!-- disconnected -->
+
+            <a *ngIf='!appService.isLogged' routerLink='/login' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Se connecter
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Se connecter
+                </li>
+            </a>
+
+
+
+
+            <!-- connected -->
+
+            <a *ngIf='appService.isLogged' routerLink='/logout' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Se déconnecter
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Se déconnecter
+                </li>
+            </a>
+
+            <a *ngIf='appService.isLogged' routerLink='/myoffer' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Mes offres
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Mes offres
+                </li>
+
+
+                <img *ngIf='this.appService.messageNotRead == "true"' src='../../../assets/pictures/envelope.svg' class='img-envelope active' />
+                <img *ngIf='this.appService.messageNotRead == "false"' src='../../../assets/pictures/envelope.svg' class='img-envelope' />
+            </a>
+
+            <a *ngIf='appService.isLogged' routerLink='/mymessage' class='nav-ul-a' (click)='handleClickAnchorMenu($event)' id='mymessage'>
+                <li class='nav-ul-a-li'>
+                    Mes messages
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Mes messages
+                </li>
+
+
+                <img *ngIf='this.appService.messageContactNotRead == "true"' src='../../../assets/pictures/envelope.svg' class='img-envelope active' />
+                <img *ngIf='this.appService.messageContactNotRead == "false"' src='../../../assets/pictures/envelope.svg' class='img-envelope' />
+            </a>
+
+            <a *ngIf='appService.isLogged' routerLink='/myaccount' class='nav-ul-a' (click)='handleClickAnchorMenu($event)'>
+                <li class='nav-ul-a-li'>
+                    Mon compte
+                </li>
+                <li class='nav-ul-a-li-fake'>
+                    Mon compte
+                </li>
+            </a>
+
+            <!-- -->
+
+        </ul>
+
+    </nav>
+
+
+
+
+
+
+
+    <!-- NAV END -->
+
+
+    <a class='header-title-anchor' (click)='this.appService.handleClickHomeLogo($event)'>      
+        <h1 class='header-title'>
+
+            <div class='header-title-div'>
+                <span class='header-title-div-span'>
+                    Fais moi
+                </span>
+            </div>
+
+            <div class='header-title-div'>
+                <span class='header-title-div-span'>
+                    un prix
+                </span>
+            </div>
+
+        </h1>
+    </a>
+
+
+
+
+
+    <div class='header-div-wrap'>
+
+
+
+
+
+        <!-- MENU START -->
+
+        <div class='header-div-menu'>
+
+            <div class='header-div-menu-div' (click)='handleClickMenu($event)'>
+                <span class='header-div-menu-div-span-bar'></span>
+                <span class='header-div-menu-div-span-bar'></span>
+                <span class='header-div-menu-div-span-bar'></span>
+            </div>
+
+        </div>
+
+        <!-- MENU END -->
+
+
+
+
+
+
+
+
+
+
+        <!-- SEARCHBAR START -->
+
+        <div class='header-div-searchbar'>
+
+            <div class='header-div-searchbar-div'>
+
+                <div class='header-div-searchbar-div-wrap'>
+
+                    <input type='search' class='header-div-searchbar-div-input' name='header-div-searchbar-div-input' id='header-div-searchbar-div-input' placeholder='Rechercher un produit' (keydown)='handleKeyDownSearch($event)'/>
+
+                    <span class='header-div-searchbar-div-span-fake'></span>
+
+                    <span class='header-div-searchbar-div-span-border-fake'></span>
+
+                    <span class='header-div-searchbar-div-span-border-right-fake'></span>
+                    <span class='header-div-searchbar-div-span-border-left-fake'></span>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SEARCHBAR END -->
+
+    </div>
+
+</header>
