@@ -1,3 +1,5 @@
+<app-loader></app-loader>
+
 <main class='main'>
 
     <section class='section-home'>
@@ -16,6 +18,60 @@
 
 
 
+        <div class='section-home-div-presentation'>
+
+            <p class='section-home-div-presentation-p'>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span-first'>Bienvenue sur "Fais moi un prix",&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span-first'>ici, le principe est simple:</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-Chaque produit a une durée de&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>validité de 14 jours.</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-Chaque utilisateur peut émettre&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>une offre de prix pour un produit.</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-Le propriétaire du produit accepte&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>votre offre de prix, vous le&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>remportez !</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-L'offre de prix peut-être acceptée&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>avant la fin de la durée de validité&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>de l'annonce.</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-À l'expiration de l'annonce,&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>le propriétaire du produit accepte&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>ou refuse une offre parmi celles qui&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>lui sont proposées.</span></span>
+
+                <br/>
+                <br/>
+
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>-Si aucune offre n'est satisfaite,&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>l'annonce est suspendue ou&nbsp;</span></span>
+                <span class='section-home-div-presentation-p-span-wrap'><span class='section-home-div-presentation-p-span'>renouvellée au choix.</span></span>
+            </p>
+
+            <div class='section-home-div-presentation-fake'></div>
+        </div>
+
+
+
+
 
         <section class='section-home-last-product'>
 
@@ -26,8 +82,16 @@
 
             <div class='section-home-last-product-div-clone'>
 
-                <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
-                <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+                <div class='section-product-carousel-div-arrow prev'>
+                    <div class='section-product-carousel-div-arrow-div prev right'></div>
+                    <div class='section-product-carousel-div-arrow-div prev left'></div>
+                    <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
+                </div>
+                <div class='section-product-carousel-div-arrow next'>
+                    <div class='section-product-carousel-div-arrow-div next right'></div>
+                    <div class='section-product-carousel-div-arrow-div next left'></div>
+                    <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+                </div>
 
             </div>
 
@@ -39,7 +103,7 @@
 
                 <div class='section-home-last-product-div-carousel'>
 
-                    <a *ngFor='let product of this.appService.getLastProductArray' class='section-home-last-product-div-anchor home' [routerLink]="['/product', product.product.product_id]">
+                    <a *ngFor='let product of this.appService.getLastProductArray' class='section-home-last-product-div-anchor home' (click)='this.appService.handleClickProductLink($event, product.product.product_id)'>
                         
                         <div class='section-home-last-product-div-anchor-div'>
 

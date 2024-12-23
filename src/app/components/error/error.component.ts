@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
+import { AppComponent } from '../../app.component';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-error',
@@ -36,13 +38,14 @@ export class ErrorComponent {
         if (window.location.pathname.startsWith('/post') || window.location.pathname.startsWith('/myaccount/product/edit')) {
 
 
-            // if delete product => run this code to skip next code //
 
             if (errorDivSpanHidden !== undefined) {
 
+
+
+                // if delete product => run this code to skip next code //
+
                 const product_id_delete = errorDivSpanHidden.getAttribute('data-product-id-delete');
-
-
 
 
                 if (product_id_delete !== null) {
@@ -79,6 +82,21 @@ export class ErrorComponent {
                     else if ((e.currentTarget as HTMLDivElement).classList.contains('yes')) {
 
 
+
+                        this.appService.timeoutRoute = setTimeout(() => {
+                            // errorDivSpan.textContent = '';
+                            // errorConfirmDiv.classList.remove('active_confirm');
+        
+        
+        
+                            // activate loader //
+                            this.appService.activeLoader();
+                            //
+        
+        
+                        }, 1000);
+
+
                         const response = await fetch(`${this.appService.hostname}/api/deleteproduct/${product_id_delete}`, {
                             method: 'DELETE',
                             headers: {
@@ -110,7 +128,169 @@ export class ErrorComponent {
                                 behavior: 'smooth'
                             });
 
-                            errorDivSpan.textContent = 'Produit supprimé avec succès';
+
+                            this.appService.timeoutRoute = setTimeout(() => {
+
+                                // deactivate loader //
+                                this.appService.inactiveLoader();
+                                //
+
+
+
+                                errorDivSpan.textContent = 'Produit supprimé avec succès';
+
+                                errorDiv.classList.add('active_success');
+
+
+
+
+                                setTimeout(() => {
+
+                                    errorDiv.classList.remove('active_success');
+                                }, 1500);
+
+
+                                setTimeout(() => {
+
+                                    this.appService.handleClickBackButton();
+                                }, 2000);
+
+
+                            }, 3500);
+
+
+
+                            
+
+
+
+                            // this.appService.timeoutRoute = setTimeout(() => {
+
+                            //     errorDiv.classList.remove('active_success');
+
+                            // }, 2500);
+
+
+
+                            // this.appService.timeoutRoute = setTimeout(() => {
+
+                            //     this.appService.handleClickBackButton();
+                            // }, 3000);
+                        }
+
+
+
+
+
+                        if (!responseData.flag) {
+
+
+                            if (responseData.message.startsWith('Expired token')) {
+
+                                mainElement.classList.remove('blur');
+                                errorConfirmDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_error');
+                                errorDiv.classList.remove('active_success');
+
+                                this.appService.timeoutRoute = setTimeout(() => {
+                
+                                errorDivSpan.textContent = 'Veuillez vous reconnecter à votre compte';
+            
+                                errorDiv.classList.add('active_error');
+            
+                                }, 750);
+                    
+                                window.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+
+                        errorDivSpanHidden.remove();
+
+                        return;
+                    }
+                }
+
+
+
+
+
+
+
+
+                // if renew product => run this code to skip next code //
+
+                const product_id_renew = errorDivSpanHidden.getAttribute('data-product-id-renew');
+
+                if (product_id_renew !== null) {
+
+                    
+                    
+
+                    if ((e.currentTarget as HTMLDivElement).classList.contains('no')) {
+
+
+                        // remove span hidden if not undefined (product_id renew ..) //
+        
+                        if (errorDivSpanHidden !== undefined) {
+        
+                            errorDivSpanHidden.remove();
+                        }
+        
+        
+        
+        
+                        this.appService.timeoutRoute = setTimeout(() => {
+                            errorDivSpan.textContent = '';
+                            errorConfirmDiv.classList.remove('active_confirm');
+                        }, 1000);
+        
+                        errorDiv.classList.remove('active_confirm');
+                        mainElement.classList.remove('blur');
+
+                        return;
+                    }
+
+
+
+                    else if ((e.currentTarget as HTMLDivElement).classList.contains('yes')) {
+
+
+                        const response = await fetch(`${this.appService.hostname}/api/renewproduct/${product_id_renew}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': `Bearer ${this.appService.user.jwt}`
+                            }
+                        })
+
+                        const responseData = await response.json();
+
+                        console.log(responseData);
+
+
+
+
+
+                        if (responseData.flag) {
+
+                            mainElement.classList.remove('blur');
+                            errorConfirmDiv.classList.remove('active_confirm');
+                            errorDiv.classList.remove('active_confirm');
+                            errorDiv.classList.remove('active_error');
+                            errorDiv.classList.remove('active_success');
+                            
+
+
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+
+                            errorDivSpan.textContent = 'Annonce renouvellée avec succès pour 14 jours supplémentaires';
 
                             errorDiv.classList.add('active_success');
 
@@ -164,6 +344,8 @@ export class ErrorComponent {
 
                         return;
                     }
+
+                    return;
                 }
             }
 
@@ -207,6 +389,14 @@ export class ErrorComponent {
                 this.appService.timeoutRoute = setTimeout(() => {
                     // errorDivSpan.textContent = '';
                     errorConfirmDiv.classList.remove('active_confirm');
+
+
+
+                    // activate loader //
+                    this.appService.activeLoader();
+                    //
+
+
                 }, 1000);
 
                 errorDiv.classList.remove('active_confirm');
@@ -368,6 +558,9 @@ export class ErrorComponent {
 
                     if (responseData.hasOwnProperty('flag')) {
 
+
+
+
                         if (responseData.flag) {
     
     
@@ -384,25 +577,50 @@ export class ErrorComponent {
                                 top: 0,
                                 behavior: 'smooth'
                             });
-    
-                            errorDivSpan.textContent = 'Produit ajouté avec succès';
-    
-                            errorDiv.classList.add('active_success');
-    
-    
-    
+
+
                             this.appService.timeoutRoute = setTimeout(() => {
+
+                                // deactivate loader //
+                                this.appService.inactiveLoader();
+                                //
+
+
+
+                                errorDivSpan.textContent = 'Produit ajouté avec succès';
     
-                                errorDiv.classList.remove('active_success');
+                                errorDiv.classList.add('active_success');
+
+
+
+
+                                setTimeout(() => {
+
+                                    errorDiv.classList.remove('active_success');
+                                }, 1500);
+
+
+                                setTimeout(() => {
+
+                                    window.location.href = '/';
+                                }, 2000);
+                            }, 3500);
     
-                            }, 2500);
     
     
     
-                            this.appService.timeoutRoute = setTimeout(() => {
+                            // this.appService.timeoutRoute = setTimeout(() => {
     
-                                window.location.href = '/';
-                            }, 3000);
+                            //     errorDiv.classList.remove('active_success');
+    
+                            // }, 5000);
+                            
+    
+    
+                            // this.appService.timeoutRoute = setTimeout(() => {
+                                
+                            //     window.location.href = '/';
+                            // }, 5500);
                         }
 
 
@@ -486,16 +704,46 @@ export class ErrorComponent {
                                 behavior: 'smooth'
                             });
 
-                            errorDivSpan.textContent = 'Produit modifié avec succès';
-
-                            errorDiv.classList.add('active_success');
-
 
 
                             this.appService.timeoutRoute = setTimeout(() => {
 
-                                errorDiv.classList.remove('active_success');
-                            }, 2500);
+                                // deactivate loader //
+                                this.appService.inactiveLoader();
+                                //
+
+
+
+                                errorDivSpan.textContent = 'Produit modifié avec succès';
+
+                                errorDiv.classList.add('active_success');
+
+
+
+
+                                setTimeout(() => {
+
+                                    errorDiv.classList.remove('active_success');
+                                }, 1500);
+
+
+                            }, 3500);
+
+
+
+
+                            
+
+
+
+                            
+
+
+
+                            // this.appService.timeoutRoute = setTimeout(() => {
+
+                            //     errorDiv.classList.remove('active_success');
+                            // }, 3500);
                         }
 
 
@@ -803,11 +1051,19 @@ export class ErrorComponent {
 
                 /* remove error box */
 
-                this.appService.timeoutRoute = setTimeout(() => {
+                // this.appService.timeoutRoute = setTimeout(() => {
                     // errorDivSpan.textContent = '';
-                    errorConfirmDiv.classList.remove('active_confirm');
-                }, 1000);
+                    // errorConfirmDiv.classList.remove('active_confirm');
 
+                    // setTimeout(() => {
+
+                        // activate loader //
+                        this.appService.activeLoader();
+                        //
+                    // }, 500);
+                // }, 500);
+
+                errorConfirmDiv.classList.remove('active_confirm');
                 errorDiv.classList.remove('active_confirm');
                 mainElement.classList.remove('blur');
 
@@ -849,33 +1105,41 @@ export class ErrorComponent {
                 if (responseData.flag) {
 
 
+
                     this.appService.timeoutRoute = setTimeout(() => {
+
+                        // deactivate loader //
+                        this.appService.inactiveLoader();
+                        //
+                    }, 2000);
+
+
+                    this.appService.timeoutRouteTwo = setTimeout(() => {
     
                         responseData.response ? 
-                            (errorDivSpan.textContent = 'Offre acceptée', errorDiv.classList.add('active_success')) : 
+                            (errorDivSpan.textContent = 'Offre acceptée', errorDiv.classList.add('active_success'), this.appService.offerSpecific[0]['offer_status'] = 'accepted') : 
 
                         !responseData.response ? 
-                            (errorDivSpan.textContent = 'Offre refusée', errorDiv.classList.add('active_error')) : 
+                            (errorDivSpan.textContent = 'Offre refusée', errorDiv.classList.add('active_error'), this.appService.offerSpecific[0]['offer_status'] = 'denied') : 
                             '';
-
-                        
-                    }, 1000);
-
+        
+                    }, 2000);
 
 
-                    this.appService.timeoutRoute = setTimeout(() => {
+
+                    this.appService.timeoutRouteThree = setTimeout(() => {
 
                         errorDiv.classList.remove('active_success');
                         errorDiv.classList.remove('active_error');
 
-                    }, 3500);
+                    }, 5000);
 
 
 
-                    this.appService.timeoutRoute = setTimeout(() => {
+                    // this.appService.timeoutRouteFour = setTimeout(() => {
 
-                        window.location.reload();
-                    }, 4000);
+                    //     window.location.reload();
+                    // }, 4500);
                 }
 
 
@@ -1129,6 +1393,222 @@ export class ErrorComponent {
                     }, 3500);
                 }
 
+            }
+        }
+
+
+
+
+
+
+
+
+
+        // delete user account //
+
+        else if (window.location.pathname.endsWith('/myaccount')) {
+
+            
+            
+            const mainElement = (document.getElementsByClassName('main')[0] as HTMLElement);
+
+            const errorDiv = (document.getElementsByClassName('error-div')[0] as HTMLDivElement);
+            const errorDivSpan = (document.getElementsByClassName('error-div-span')[0] as HTMLSpanElement);
+            const errorConfirmDiv = (document.getElementsByClassName('error-div-confirm-div')[0] as HTMLDivElement);
+
+            const errorDivSpanHidden = (document.getElementsByClassName('error-div-span-hidden')[0] as HTMLSpanElement);
+
+
+
+
+            if (errorDivSpanHidden !== undefined) {
+
+
+                // if delete user => run this code to skip next code //
+
+                const user_id_delete = errorDivSpanHidden.getAttribute('data-user-id-delete');
+
+
+                if (user_id_delete !== null) {
+
+
+
+
+                    if ((e.currentTarget as HTMLDivElement).classList.contains('no')) {
+
+
+                        // remove span hidden if not undefined (user_id_delete ..) //
+        
+                        if (errorDivSpanHidden !== undefined) {
+        
+                            errorDivSpanHidden.remove();
+                        }
+        
+        
+        
+        
+                        this.appService.timeoutRoute = setTimeout(() => {
+                            errorDivSpan.textContent = '';
+                            errorConfirmDiv.classList.remove('active_confirm');
+                        }, 1000);
+        
+                        errorDiv.classList.remove('active_confirm');
+                        mainElement.classList.remove('blur');
+
+                        return;
+                    }
+
+
+
+                    else if ((e.currentTarget as HTMLDivElement).classList.contains('yes')) {
+
+
+
+                        // this.appService.timeoutRoute = setTimeout(() => {
+                            // errorDivSpan.textContent = '';
+                            // errorConfirmDiv.classList.remove('active_confirm');
+        
+        
+        
+                            // activate loader //
+                            this.appService.activeLoader();
+                            //
+        
+        
+                        // }, 1000);
+
+
+
+
+                        const response = await fetch(`${this.appService.hostname}/api/deleteuser/${user_id_delete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': `Bearer ${this.appService.user.jwt}`
+                            }
+                        })
+
+                        const responseData = await response.json();
+
+                        console.log(responseData);
+
+
+
+
+
+
+
+                        if (responseData.flag) {
+
+                            mainElement.classList.remove('blur');
+                            errorConfirmDiv.classList.remove('active_confirm');
+                            errorDiv.classList.remove('active_confirm');
+                            errorDiv.classList.remove('active_error');
+                            errorDiv.classList.remove('active_success');
+                            
+
+
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+
+
+
+                            
+
+
+
+                            this.appService.timeoutRoute = setTimeout(() => {
+
+
+                                setTimeout(() => {
+                                    // deactivate loader //
+                                    this.appService.inactiveLoader();
+                                    //
+                                    this.router.navigate(['/']);
+
+                                    errorDivSpan.textContent = 'Profil utilisateur supprimé avec succès';
+
+                                    errorDiv.classList.add('active_success');
+                                }, 1500)
+
+                                
+
+
+
+
+                                setTimeout(() => {
+
+                                    errorDiv.classList.remove('active_success');
+                                }, 3500);
+
+
+                            }, 125);
+
+
+
+
+
+                            // delete cookies //
+
+                            this.appService.user = Object.assign({}, {
+                                id: 0,
+                                name: '',
+                                firstname: '',
+                                email: '',
+                                phone: '',
+                                password: '',
+                                created_at: '',
+                                updated_at: '',
+                                jwt: ''
+                            });
+                    
+                            this.appService.isLogged = false;
+                    
+                            this.appService.messageContactNotRead = 'false';
+                            this.appService.messageNotRead = 'false';
+                    
+                            document.cookie = `userGiveDiscount=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+                            document.cookie = `messageContactNotReadGiveDiscount=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+                            document.cookie = `messageNotReadGiveDiscount=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+                        }
+
+
+
+
+
+                        if (!responseData.flag) {
+
+
+                            if (responseData.message.startsWith('Expired token')) {
+
+                                mainElement.classList.remove('blur');
+                                errorConfirmDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_error');
+                                errorDiv.classList.remove('active_success');
+
+                                this.appService.timeoutRoute = setTimeout(() => {
+                
+                                errorDivSpan.textContent = 'Veuillez vous reconnecter à votre compte';
+            
+                                errorDiv.classList.add('active_error');
+            
+                                }, 750);
+                    
+                                window.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+
+                        errorDivSpanHidden.remove();
+
+                        return;
+                    }
+                }
             }
         }
     }

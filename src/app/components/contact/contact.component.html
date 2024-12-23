@@ -1,0 +1,55 @@
+<app-loader></app-loader>
+
+<main class='main'>
+
+    <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
+        <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
+    </button>
+
+    <section class='section-contact'>
+
+
+
+        <h2 class='section-register-title'>Contact</h2>
+
+
+
+        <div class='section-contact-div'>
+
+            <p class='section-legal-notice-div-p contact'>
+
+                Une remarque, une observation ? N'hésites pas à nous contacter à travers ce formulaire.
+
+            </p>
+
+
+
+            <form class='section-contact-div-form contact' method="POST" id='section-contact-div-form' (submit)='handleSubmitContact($event)'>
+
+                <div class='register-label-input-wrap'>
+                    <label for='contact-name' class='register-label'>Nom:</label>
+                    <input type='text' class='register-name' id='contact-name' name='contact-name' />
+                </div>
+
+                <div class='register-label-input-wrap'>
+                    <label for='contact-firstname' class='register-label'>Prénom:</label>
+                    <input type='text' class='register-firstname' id='contact-firstname' name='contact-firstname' />
+                </div>
+
+                <div class='register-label-input-wrap'>
+                    <label for='contact-email' class='register-label'>Email:</label>
+                    <input type='email' class='register-email' id='contact-email' name='contact-email' />
+                </div>
+    
+                <div class='register-label-input-wrap'>
+                    <label for='contact-textarea' class='register-label'>Message:</label>
+                    <textarea class='section-contact-div-form-contact-textarea' id='contact-textarea' name='contact-textarea' placeholder='20 caractères minimum'></textarea>
+                </div>
+    
+                <button type='submit' class='register-button-submit' name='register-button-submit'>Envoyer</button>
+            </form>
+
+        </div>
+
+    </section>
+</main>

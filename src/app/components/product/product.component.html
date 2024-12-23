@@ -322,7 +322,16 @@
 
             <div *ngIf='productData[0] !== undefined && !isValidObjectOffer(offerAccepted)' class='section-search-result-element-make-offer-div'>
 
-                <form class='form-offer' name='form-offer' method='POST' (submit)='handleSubmitOffer($event)'>
+
+                <!-- if not expired product time -->
+
+                <span *ngIf='this.appService.productDataExpireTime.day >= 0' class='span-expire-product'>
+                    Il vous reste <strong>{{ this.appService.productDataExpireTime.day }}</strong> jours <strong>{{ this.appService.productDataExpireTime.hour }}</strong> heures <strong>{{ this.appService.productDataExpireTime.minute }}</strong> minutes et <strong>{{ this.appService.productDataExpireTime.second }}</strong> secondes pour déposer une nouvelle offre.
+                </span>
+
+
+
+                <form *ngIf='this.appService.productDataExpireTime.day >= 0' class='form-offer' name='form-offer' method='POST' (submit)='handleSubmitOffer($event)'>
 
                     <label for='section-search-result-element-make-offer-div-input' class='section-search-result-element-make-offer-div-label'>Faire une offre de:</label>
 
@@ -357,6 +366,20 @@
                     <button type='submit' class='button-submit-offer' name='button-submit-offer'>Valider</button>
 
                 </form>
+
+
+
+
+
+                <!-- if expired product time -->
+
+                <div *ngIf='this.appService.productDataExpireTime.day < 0'>
+
+                    <span class=''>
+                        La date d'expiration pour ce produit est arrivée à son terme, il n'est plus possible d'émettre d'offres.
+                    </span>
+
+                </div>
 
             </div>
 
@@ -403,8 +426,17 @@
         
                     <div class='section-home-last-product-div-clone'>
         
-                        <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
-                        <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+                        <div class='section-product-carousel-div-arrow prev'>
+                            <div class='section-product-carousel-div-arrow-div prev right'></div>
+                            <div class='section-product-carousel-div-arrow-div prev left'></div>
+                            <img class='section-product-carousel-arrow home prev' src='../../../assets/pictures/arrow-prev.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "prev")'/>
+                        </div>
+
+                        <div class='section-product-carousel-div-arrow next'>
+                            <div class='section-product-carousel-div-arrow-div next right'></div>
+                            <div class='section-product-carousel-div-arrow-div next left'></div>
+                            <img class='section-product-carousel-arrow home next' src='../../../assets/pictures/arrow-next.svg' (click)='this.appService.handleClickArrowCarouselHome($event, "next")'/>
+                        </div>
         
                     </div>
         
@@ -418,7 +450,7 @@
         
                             <!-- <a *ngFor='let product of this.appService.getOtherProductArrayUser' class='section-home-last-product-div-anchor home' [routerLink]="['/product', product.product.product_id]" (click)='handleClickProductLink($event), product.product.product_id'> -->
 
-                            <a *ngFor='let product of this.appService.getOtherProductArrayUser' class='section-home-last-product-div-anchor home' (click)='handleClickProductLink($event, product.product.product_id)'>
+                            <a *ngFor='let product of this.appService.getOtherProductArrayUser' class='section-home-last-product-div-anchor home' (click)='this.appService.handleClickProductLink($event, product.product.product_id)'>
                                 
                                 <div class='section-home-last-product-div-anchor-div'>
         

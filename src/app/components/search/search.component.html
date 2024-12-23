@@ -1,3 +1,5 @@
+<app-loader></app-loader>
+
 <main class='main'>
 
     <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
@@ -7,10 +9,16 @@
     <section class='section-search'>
 
 
-        <div class='section-search-filter-button-div'>
+        <div class='section-search-filter-button-div inactive'>
             <img class='section-search-filter-img' src='/assets/pictures/filter-icon.svg' (click)='handleClickFilter($event, "filter")'/>
+            <div class='section-search-filter-img-div-back'></div>
 
             <img class='section-search-sort-img' src='/assets/pictures/sort-down.svg' (click)='handleClickFilter($event, "sort")'/>
+            <div class='section-search-filter-img-div-back'></div>
+
+            <div class='section-search-filter-button-div-arrow-top' (click)='this.appService.handleClickArrowBackTop($event)'>
+                <img src='../../../assets/pictures/arrow-right-short.svg' class='section-search-filter-button-div-arrow-top-img' />
+            </div>
         </div>
 
 
@@ -213,7 +221,7 @@
 
         <span class='section-search-result-span'>Résultats de la recherche "<span class='section-search-result-span-word'>{{ this.appService.searchWord }}</span>":</span>
 
-        <span class='section-search-result-span-count'>{{ this.appService.searchResultKept.length }} produits trouvés</span>
+        <span class='section-search-result-span-count'>{{ this.appService.searchResultKeptSortOffer.length }} produits trouvés</span>
 
         <section class='section-search-result'>
 

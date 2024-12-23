@@ -1,3 +1,5 @@
+<app-loader></app-loader>
+
 <main class='main'>
 
     <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
@@ -53,12 +55,12 @@
 
             <div class='section-myoffer-div-button-div'>
 
-                <button type='button' class='section-my-offer-button-received' name='section-my-offer-button-received' (click)='getOffer("received")'>
+                <button type='button' class='section-my-offer-button-received' name='section-my-offer-button-received' (click)='getOffer($event, "received")'>
                     <span class='section-my-offer-button-span'>Reçues</span>
                     <img class='section-my-offer-button-img received' src='../../../assets/pictures/arrow-left-short.svg' />
                 </button>
 
-                <button type='button' class='section-my-offer-button-sent' name='section-my-offer-button-sent' (click)='getOffer("sent")'>
+                <button type='button' class='section-my-offer-button-sent' name='section-my-offer-button-sent' (click)='getOffer($event, "sent")'>
                     <span class='section-my-offer-button-span'>Envoyées</span>
                     <img class='section-my-offer-button-img sent' src='../../../assets/pictures/arrow-left-short.svg' />
                 </button>
@@ -112,23 +114,23 @@
 
                 <button type='button' class='cross-filter-offer' name='cross-filter-offer' (click)='handleClickCrossOffer($event)'>x</button>
 
-                <div *ngIf='offerSpecific[0] !== undefined' class='section-myoffer-section-specific-offer-div-div'>
+                <div *ngIf='this.appService.offerSpecific[0] !== undefined' class='section-myoffer-section-specific-offer-div-div'>
 
                     <div class='specific-offer-div-wrap'>
 
-                        <img class='specific-offer-img' src='http://localhost:8000/uploads/pictures/{{ offerSpecific[0]["photo_photo_list"].split(",")[0] }}' />
+                        <img class='specific-offer-img' src='http://localhost:8000/uploads/pictures/{{ this.appService.offerSpecific[0]["photo_photo_list"].split(",")[0] }}' />
 
                     </div>
 
 
 
-                    <a class='specific-offer-anchor' href='/product/{{ offerSpecific[0]["product_id"] }}'>Voir produit</a>
+                    <a class='specific-offer-anchor' href='/product/{{ this.appService.offerSpecific[0]["product_id"] }}'>Voir produit</a>
 
 
 
-                    <span class='specific-offer-product'>{{ offerSpecific[0]["product_name"] }}</span>
+                    <span class='specific-offer-product'>{{ this.appService.offerSpecific[0]["product_name"] }}</span>
 
-                    <span class='specific-offer-city'>{{ offerSpecific[0]["product_city"].charAt(0).toUpperCase() + offerSpecific[0]["product_city"].slice(1) }}</span>
+                    <span class='specific-offer-city'>{{ this.appService.offerSpecific[0]["product_city"].charAt(0).toUpperCase() + this.appService.offerSpecific[0]["product_city"].slice(1) }}</span>
 
 
 
@@ -136,17 +138,17 @@
 
                         <div class='specific-offer-div-wrap-div'>
                             <span class='specific-offer-span'>Offreur:</span>
-                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["user_offer_firstname"].charAt(0).toUpperCase() + offerSpecific[0]["user_offer_firstname"].slice(1) }}</span>
+                            <span class='specific-offer-firstname'>{{ this.appService.offerSpecific[0]["user_offer_firstname"].charAt(0).toUpperCase() + this.appService.offerSpecific[0]["user_offer_firstname"].slice(1) }}</span>
                         </div>
 
                         <div class='specific-offer-div-wrap-div'>
                             <span class='specific-offer-span'>Montant:</span>
-                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["offer_offerprice"] }} €</span>
+                            <span class='specific-offer-firstname'>{{ this.appService.offerSpecific[0]["offer_offerprice"] }} €</span>
                         </div>
 
                         <div class='specific-offer-div-wrap-div'>
                             <span class='specific-offer-span'>Statut:</span>
-                            <span class='specific-offer-firstname'>{{ offerSpecific[0]["offer_status"] == "pending" ? "En attente" : "" }}</span>
+                            <span class='specific-offer-firstname'>{{ this.appService.offerSpecific[0]["offer_status"] == "pending" ? "En attente" : "" }}</span>
                         </div>
 
 
@@ -157,9 +159,9 @@
                                 <button type='button' class='specific-offer-button-deny' name='specific-offer-button-deny' (click)='handleClickAcceptDenyOffer($event, "deny")'>Refuser</button>
                             </div> -->
 
-                            <div *ngIf='offerSpecific[0]["offer_user_offer"] !== offerSpecific[0]["product_user_id"] && 
-                                        offerSpecific[0]["product_user_id"] == this.appService.user.id &&
-                                        offerSpecific[0]["offer_status"] == "pending"' class='specific-offer-div-wrap-div'>
+                            <div *ngIf='this.appService.offerSpecific[0]["offer_user_offer"] !== this.appService.offerSpecific[0]["product_user_id"] && 
+                                        this.appService.offerSpecific[0]["product_user_id"] == this.appService.user.id &&
+                                        this.appService.offerSpecific[0]["offer_status"] == "pending"' class='specific-offer-div-wrap-div'>
                                 <button type='button' class='specific-offer-button-accept' name='specific-offer-button-accept' (click)='handleClickAcceptDenyOffer($event, "accepted")'>Accepter</button>
                                 <button type='button' class='specific-offer-button-deny' name='specific-offer-button-deny' (click)='handleClickAcceptDenyOffer($event, "denied")'>Refuser</button>
                             </div>
@@ -171,9 +173,9 @@
                                 <span *ngIf='offerSpecific[0]["offer_status"] == "denied"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Refusé</span>
                             </div> -->
 
-                            <div *ngIf='offerSpecific[0]["offer_status"] !== "pending"' class='specific-offer-div-wrap-div'>
-                                <span *ngIf='offerSpecific[0]["offer_status"] == "accepted"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Accepté</span>
-                                <span *ngIf='offerSpecific[0]["offer_status"] == "denied"' class='specific-offer-status-response' [ngClass]='offerSpecific[0]["offer_status"]'>Refusé</span>
+                            <div *ngIf='this.appService.offerSpecific[0]["offer_status"] !== "pending"' class='specific-offer-div-wrap-div'>
+                                <span *ngIf='this.appService.offerSpecific[0]["offer_status"] == "accepted"' class='specific-offer-status-response' [ngClass]='this.appService.offerSpecific[0]["offer_status"]'>Accepté</span>
+                                <span *ngIf='this.appService.offerSpecific[0]["offer_status"] == "denied"' class='specific-offer-status-response' [ngClass]='this.appService.offerSpecific[0]["offer_status"]'>Refusé</span>
                             </div>
 
                         <!-- -->
@@ -185,9 +187,9 @@
 
                             <form class='specific-offer-messaging-form' name='specific-offer-messaging-form' method='post' (submit)='handleSubmitMessage($event)'>
 
-                                <span *ngIf='offerSpecific[0]["product_user_id"] == this.appService.user.id' class='specific-offer-span'>Contacter {{ offerSpecific[0]["user_offer_firstname"] }}</span>
+                                <span *ngIf='this.appService.offerSpecific[0]["product_user_id"] == this.appService.user.id' class='specific-offer-span'>Contacter {{ this.appService.offerSpecific[0]["user_offer_firstname"] }}</span>
 
-                                <span *ngIf='offerSpecific[0]["product_user_id"] !== this.appService.user.id' class='specific-offer-span'>Contacter {{ offerSpecific[0]["user_product_firstname"] }}</span>
+                                <span *ngIf='this.appService.offerSpecific[0]["product_user_id"] !== this.appService.user.id' class='specific-offer-span'>Contacter {{ this.appService.offerSpecific[0]["user_product_firstname"] }}</span>
 
                                 <div class='specific-offer-div-messaging'>
 

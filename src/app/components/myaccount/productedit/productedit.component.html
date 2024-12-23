@@ -1,3 +1,5 @@
+<app-loader></app-loader>
+
 <main class='main'>
 
     <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
@@ -6,7 +8,62 @@
 
     <section class='section-myaccount-product-edit'>
 
-        <h2 class='section-register-title'>Modifier mon produit</h2>
+        <!-- MANAGE PRODUCT -->
+
+        <h2 class='section-register-title edit'>Gérer mon produit</h2>
+
+
+
+        
+
+            <!-- if product has not expired -->
+
+            <span *ngIf='!this.appService.productExpireBoolean' class='span-expire-product'>
+                L'annonce expire dans: <strong>{{ this.appService.productDataExpireTime.day }}</strong> jours <strong>{{ this.appService.productDataExpireTime.hour }}</strong> heures <strong>{{ this.appService.productDataExpireTime.minute }}</strong> minutes et <strong>{{ this.appService.productDataExpireTime.second }}</strong> secondes.
+            </span>
+
+            
+
+
+
+            <!-- if product has expired -->
+
+            <span *ngIf='this.appService.productExpireBoolean' class='span-expire-product'>
+                L'annonce a expiré, le délai de 14 jours est passé.
+                <br />
+                <br />
+                Vous pouvez:
+                <br />
+                <br />
+                -Renouveller votre annonce pour une durée de 14 jours supplémentaires.
+                <br />
+                <br />
+                -Accepter une offre parmis celles qui vous ont été présentées.
+            </span>
+
+
+            <button *ngIf='this.appService.productExpireBoolean' type='submit' value='renew' class='button-renew-ad-product' attr.data-id-product="{{ this.product_id }}" (click)='handleClickRenewSeeButton($event)'>Renouveller</button>
+
+            <!-- -->
+
+
+
+
+
+            
+
+            <!-- in all cases -->
+
+            <button type='submit' value='see-offer' class='button-see-offer-product' attr.data-id-product="{{ this.product_id }}" (click)='handleClickRenewSeeButton($event)'>Voir mes offres</button>
+
+            <!-- -->
+
+
+
+
+        <!-- UPDATE PRODUCT -->
+
+        <h2 class='section-register-title edit'>Modifier mon produit</h2>
 
 
 
@@ -201,9 +258,9 @@
 
 
 
+        <!-- REMOVE PRODUCT -->
 
-
-        <h2 class='section-register-title'>Supprimer mon produit</h2>
+        <h2 class='section-register-title edit'>Supprimer mon produit</h2>
 
 
         <div class='product-edit-delete-div'>

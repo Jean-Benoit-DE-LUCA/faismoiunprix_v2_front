@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppService } from '../../app.service';
 
 import { CommonModule } from '@angular/common';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-myoffer',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, LoaderComponent],
     templateUrl: './myoffer.component.html',
     styleUrl: './myoffer.component.css'
 })
@@ -16,7 +17,7 @@ export class MyofferComponent {
 
     offerResult: Array<any> = [];
 
-    offerSpecific: Array<any> = [];
+    // offerSpecific: Array<any> = [];
 
     offerSpecificMessage: Array<any> = [];
 
@@ -24,7 +25,12 @@ export class MyofferComponent {
 
 
 
-    constructor(private router: Router, public appService: AppService) {
+    constructor(private router: Router, private route: ActivatedRoute, public appService: AppService) {
+
+        this.route.queryParamMap.subscribe(params => {
+
+            const idProduct = params.get('see');
+        });
 
         this.appService.manageInterval();
     }
@@ -34,7 +40,7 @@ export class MyofferComponent {
 
 
 
-    async getOffer(received_sent: string) {
+    async getOffer(e: Event, received_sent: string) {
 
 
         setTimeout(() => {
@@ -54,10 +60,29 @@ export class MyofferComponent {
         await this.appService.checkCookie();
 
 
-
         if (received_sent == 'received') {
 
-            this.manageOffer(await this.getReceivedOfferByUser(this.appService.user.id));
+
+
+
+            // if specific product_id is set from product edit page to see offers //
+
+            const specificProductId = (e.target as HTMLButtonElement).getAttribute('specific_product_id');
+
+
+
+
+            if (specificProductId !== null) {
+
+                this.manageOffer(await this.getReceivedOfferByUser(this.appService.user.id), Number(specificProductId));
+
+                (e.target as HTMLButtonElement).removeAttribute('specific_product_id');
+            }
+
+            else if (specificProductId == null) {
+
+                this.manageOffer(await this.getReceivedOfferByUser(this.appService.user.id));
+            }
         }
 
 
@@ -208,13 +233,26 @@ export class MyofferComponent {
 
 
 
-    manageOffer(array_result: Array<any>) {
+    manageOffer(array_result: Array<any>, specific_product_id: number | null = null) {
 
         this.offerResult = array_result.slice();
 
-        console.log(this.offerResult);
+        console.log(specific_product_id);
 
-        if (array_result.length > 0) {
+
+
+
+
+
+        if (specific_product_id !== null) {
+
+            this.offerResult = this.offerResult.filter((element) => element.offer_product_id == specific_product_id);
+        }
+
+
+
+
+        if (this.offerResult.length > 0) {
 
             const positionFirstTitleRow = (document.getElementsByClassName('table-myoffer-result-tbody-tr-table-tr') as HTMLCollectionOf<HTMLTableRowElement>);
 
@@ -238,11 +276,16 @@ export class MyofferComponent {
 
     async handleClickRowOffer(e: MouseEvent) {
 
+        const rowOffersImageEnvelope = (e.currentTarget as HTMLTableRowElement).getElementsByClassName('img-envelope offer')[0];
+
+
+
+
         const offerId = ((e.currentTarget as HTMLTableRowElement).getAttribute('data-offer-id'));
 
         const offerData = this.offerResult.filter( elem => elem.offer_id == offerId);
 
-        this.offerSpecific = offerData.slice();
+        this.appService.offerSpecific = offerData.slice();
 
 
 
@@ -255,7 +298,7 @@ export class MyofferComponent {
 
 
 
-        console.log(this.offerSpecific[0]);
+        console.log(this.appService.offerSpecific[0]);
 
 
 
@@ -283,7 +326,17 @@ export class MyofferComponent {
 
                 if (!responseUpdateReceiveReadData.messageReadStillFalse) {
 
-                    this.offerSpecific[0].message_not_read = false;
+                    this.appService.offerSpecific[0].message_not_read = false;
+
+
+
+
+                    if (rowOffersImageEnvelope.classList.contains('active')) {
+
+                        rowOffersImageEnvelope.classList.remove('active');
+                    }
+
+                    // TODO => CONTACT => NOT HERE //
                 }
             }
 
@@ -308,11 +361,11 @@ export class MyofferComponent {
 
 
         
-        this.getMessageByOffer(this.offerSpecific[0]['offer_id'], this.offerSpecific[0]['product_user_id'], this.offerSpecific[0]['offer_user_offer']);
+        this.getMessageByOffer(this.appService.offerSpecific[0]['offer_id'], this.appService.offerSpecific[0]['product_user_id'], this.appService.offerSpecific[0]['offer_user_offer']);
 
         this.appService.intervalFetchMessage = setInterval(() => {
 
-            this.updateMessageByOffer(this.offerSpecific[0]['offer_id'], this.offerSpecific[0]['product_user_id'], this.offerSpecific[0]['offer_user_offer']);
+            this.updateMessageByOffer(this.appService.offerSpecific[0]['offer_id'], this.appService.offerSpecific[0]['product_user_id'], this.appService.offerSpecific[0]['offer_user_offer']);
         }, 10000);
     }
 
@@ -560,8 +613,8 @@ export class MyofferComponent {
         else {
 
             console.log(this.appService.user.id);
-            console.log(this.offerSpecific[0]['offer_user_offer']);
-            console.log(this.offerSpecific[0]['product_id']);
+            console.log(this.appService.offerSpecific[0]['offer_user_offer']);
+            console.log(this.appService.offerSpecific[0]['product_id']);
             console.log(inputMessage.value);
 
             console.log(this.appService.user);
@@ -578,10 +631,10 @@ export class MyofferComponent {
                 },
                 body: JSON.stringify({
                     userId: this.appService.user.id,
-                    productUserId: this.offerSpecific[0]['product_user_id'],
-                    userIdOffer: this.offerSpecific[0]['offer_user_offer'],
-                    offerId: this.offerSpecific[0]['offer_id'],
-                    productId: this.offerSpecific[0]['product_id'],
+                    productUserId: this.appService.offerSpecific[0]['product_user_id'],
+                    userIdOffer: this.appService.offerSpecific[0]['offer_user_offer'],
+                    offerId: this.appService.offerSpecific[0]['offer_id'],
+                    productId: this.appService.offerSpecific[0]['product_id'],
                     inputMessage: inputMessage.value
                 })
             });
@@ -803,7 +856,7 @@ export class MyofferComponent {
 
     handleClickAcceptDenyOffer(e: MouseEvent, status: string) {
 
-        console.log(this.offerSpecific[0]['user_offer_firstname']);
+        console.log(this.appService.offerSpecific[0]['user_offer_firstname']);
 
         const mainElement = (document.getElementsByClassName('main')[0] as HTMLElement);
 
@@ -822,7 +875,7 @@ export class MyofferComponent {
 
                 const spanHidden = document.createElement('span');
                 spanHidden.setAttribute('class', 'error-div-span-hidden');
-                spanHidden.setAttribute('data-offer-id', this.offerSpecific[0]['offer_id']);
+                spanHidden.setAttribute('data-offer-id', this.appService.offerSpecific[0]['offer_id']);
                 spanHidden.setAttribute('data-offer-response', 'accepted');
 
                 errorDiv.append(spanHidden);
@@ -832,7 +885,7 @@ export class MyofferComponent {
                 errorDiv.classList.remove('active_error');
 
 
-                errorDivSpan.textContent = `Êtes-vous sur d\'accepter l\'offre de ${this.offerSpecific[0]['user_offer_firstname']} de ${this.offerSpecific[0]['offer_offerprice']} €`;
+                errorDivSpan.textContent = `Êtes-vous sur d\'accepter l\'offre de ${this.appService.offerSpecific[0]['user_offer_firstname']} de ${this.appService.offerSpecific[0]['offer_offerprice']} €`;
                 errorConfirmDiv.classList.add('active_confirm');
                 errorDiv.classList.add('active_confirm');
                 mainElement.classList.add('blur');
@@ -857,7 +910,7 @@ export class MyofferComponent {
 
                 const spanHidden = document.createElement('span');
                 spanHidden.setAttribute('class', 'error-div-span-hidden');
-                spanHidden.setAttribute('data-offer-id', this.offerSpecific[0]['offer_id']);
+                spanHidden.setAttribute('data-offer-id', this.appService.offerSpecific[0]['offer_id']);
                 spanHidden.setAttribute('data-offer-response', 'denied');
 
                 errorDiv.append(spanHidden);
@@ -866,7 +919,7 @@ export class MyofferComponent {
                 errorDiv.classList.remove('active_error');
 
 
-                errorDivSpan.textContent = `Êtes-vous sur de refuser l\'offre de ${this.offerSpecific[0]['user_offer_firstname']} de ${this.offerSpecific[0]['offer_offerprice']} €`;
+                errorDivSpan.textContent = `Êtes-vous sur de refuser l\'offre de ${this.appService.offerSpecific[0]['user_offer_firstname']} de ${this.appService.offerSpecific[0]['offer_offerprice']} €`;
                 errorConfirmDiv.classList.add('active_confirm');
                 errorDiv.classList.add('active_confirm');
                 mainElement.classList.add('blur');

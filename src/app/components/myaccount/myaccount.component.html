@@ -1,3 +1,6 @@
+<app-loader></app-loader>
+
+
 <main class='main'>
 
     <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
@@ -117,6 +120,29 @@
             </section>
 
 
+
+        </section>
+
+
+
+
+
+
+
+
+        <section class='section-myaccount-delete'>
+
+            <h2 class='section-subtitle'>Supprimer mon compte:</h2>
+
+            <section class='section-myaccount-delete-section-delete'>
+
+                <form class='section-delete-form' name='section-delete-form' (submit)='handleDeleteAccount($event)'>
+            
+                    <button type='submit' class='delete-account-button-submit' name='delete-account-button-submit'>Supprimer</button>
+        
+                </form>
+
+            </section>
 
         </section>
 

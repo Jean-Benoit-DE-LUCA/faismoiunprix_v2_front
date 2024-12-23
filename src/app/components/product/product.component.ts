@@ -74,6 +74,15 @@ export class ProductComponent {
 
     constructor(private router: Router, public appService: AppService) {
 
+        window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+        });
+
+
+
+        
+
 
 
 
@@ -132,7 +141,8 @@ export class ProductComponent {
             });
 
 
-        }, 125);
+        }, 150);
+        
     }
 
 
@@ -189,6 +199,9 @@ export class ProductComponent {
 
 
 
+
+
+
         // sort offer array by created_at (last oldest) //
 
         this.productData[0]['offer'] = this.productData[0]['offer'].slice().sort((a: any, b: any) => {
@@ -210,6 +223,23 @@ export class ProductComponent {
         console.log(this.productData[0]);
 
         this.checkAcceptedOffer(this.productData[0]['offer']);
+
+
+
+
+        // get expire time product //
+
+        if (this.appService.intervalExpireProduct !== null) {
+
+            clearInterval(this.appService.intervalExpireProduct);
+
+            this.appService.intervalExpireProduct = null;
+        }
+
+        
+        this.appService.intervalExpireProduct = setInterval(() => {
+            this.appService.getRemainingTimeProduct(this.productData[0].product.product_created_at);
+        }, 1000);
     }
 
 
@@ -818,26 +848,6 @@ export class ProductComponent {
             }
 
         }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    handleClickProductLink(e: Event, product_id: number) {
-
-        window.location.replace(`/product/${product_id}`);
-
-        window.scrollTo({
-            top: 0,
-            behavior: 'instant'
-        });
     }
 
 }

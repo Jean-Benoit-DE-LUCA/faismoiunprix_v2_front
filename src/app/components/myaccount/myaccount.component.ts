@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 
 import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-myaccount',
     standalone: true,
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, CommonModule, LoaderComponent],
     templateUrl: './myaccount.component.html',
     styleUrl: './myaccount.component.css'
 })
@@ -20,6 +21,18 @@ export class MyaccountComponent {
 
 
     constructor(public appService: AppService, private router: Router) {
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+        });
+
+
+
+
+
+
+        
 
         this.appService.manageInterval();
 
@@ -275,5 +288,93 @@ export class MyaccountComponent {
 
             }, 2500);
         }
+    }
+
+
+
+
+
+
+
+    // DELETE ACCOUNT //
+
+    async handleDeleteAccount(e: SubmitEvent) {
+
+        const mainElement = (document.getElementsByClassName('main')[0] as HTMLElement);
+
+        const errorDiv = (document.getElementsByClassName('error-div')[0] as HTMLDivElement);
+        const errorDivSpan = (document.getElementsByClassName('error-div-span')[0] as HTMLSpanElement);
+        const errorConfirmDiv = (document.getElementsByClassName('error-div-confirm-div')[0] as HTMLDivElement);
+
+        e.preventDefault();
+
+
+
+
+        // if user logged in //
+
+        if (this.appService.user.id > 0) {
+
+
+
+            this.appService.timeoutRoute = setTimeout(() => {
+
+                errorDivSpan.textContent = 'Êtes-vous sur de supprimer votre compte ? Cette action entraînera la suppression de tous vos produits, offres, messages. Cette action est irréversible';
+                errorConfirmDiv.classList.add('active_confirm');
+                errorDiv.classList.add('active_confirm');
+                mainElement.classList.add('blur');
+
+                const spanHidden = document.createElement('span');
+                spanHidden.setAttribute('class', 'error-div-span-hidden');
+                spanHidden.setAttribute('data-user-id-delete', (this.appService.user.id).toString());
+
+                errorDiv.append(spanHidden);
+
+            }, 750);
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+
+
+        else {
+
+            this.appService.timeoutRoute = setTimeout(() => {
+
+                errorDivSpan.textContent = 'Veuillez vous connecter à votre compte afin de poursuivre';
+
+                errorDiv.classList.add('active_error');
+
+            }, 750);
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+
+
+            this.appService.timeoutRoute = setTimeout(() => {
+
+                errorDiv.classList.remove('active_error');
+            }, 2500);
+        }
+
+        // -- //
+
+        // const response = await fetch(`${this.appService.hostname}/api/deleteuser/${this.appService.user.id}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-type': 'application/json',
+        //         'Authorization': `Bearer ${this.appService.user.jwt}`
+        //     }
+        // });
+
+        // const responseData = await response.json();
+
+        // console.log(responseData);
     }
 }

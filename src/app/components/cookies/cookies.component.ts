@@ -3,14 +3,13 @@ import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-legal-notice',
+    selector: 'app-cookies',
     standalone: true,
     imports: [],
-    templateUrl: './legal-notice.component.html',
-    styleUrl: './legal-notice.component.css'
+    templateUrl: './cookies.component.html',
+    styleUrl: './cookies.component.css'
 })
-
-export class LegalNoticeComponent {
+export class CookiesComponent {
 
     constructor(public appService: AppService, private router: Router) {
 

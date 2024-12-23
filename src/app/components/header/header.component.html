@@ -1,5 +1,91 @@
 <header class='header'>
 
+    <div>
+        <a class='header-title-anchor-anchor' (click)='handleClickAnchorArrowHeader($event)'>
+            <div class='header-title-anchor-div'>
+                <span class='header-title-anchor-div-span'>Tous produits,</span>
+                <span class='header-title-anchor-div-span'>Toutes catégories!</span>
+
+                <!-- <span class='header-title-anchor-div-span-cross' (click)='handleClickCrossAnimHeader($event)'>x</span> -->
+
+                <div class='header-title-anchor-div-fake'></div>
+
+                <div class='header-title-anchor-div-div'>
+                    <div class='header-title-anchor-div-img-arrow-bottom-div'></div>
+
+                    <div class='header-title-anchor-div-div-content-div'>
+
+                            <a *ngFor='let product of this.appService.getRandomProduct' class='section-home-last-product-div-anchor home' (click)='this.appService.handleClickProductLink($event, product.product.product_id)'>
+                                
+                                <div class='section-home-last-product-div-anchor-div header-random'>
+        
+                                    <!-- img element if IMAGE or NOT -->
+        
+                                    <img *ngIf="product.photo.photo_photo_list == null" src='http://localhost:8000/pictures/no-image.svg' class='section-search-result-element-img no-image' />
+        
+                                    <img *ngIf="product.photo.photo_photo_list !== null" src='http://localhost:8000/uploads/pictures/{{ product.photo.photo_photo_list.split(",")[0] }}' class='section-search-result-element-img header-random' />
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+                                    <!-- title -->
+        
+                                    <span *ngIf='product.product.product_name.length >= 25' class='section-search-result-element-span-title home header-random'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1, 25) }}...</span>
+        
+                                    <span *ngIf='product.product.product_name.length < 25' class='section-search-result-element-span-title home header-random'>{{ product.product.product_name.charAt(0).toUpperCase() + product.product.product_name.slice(1) }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+        
+                                    <!-- city-->
+        
+                                    <span class='section-search-result-element-span-city home header-random'>{{ product.product.product_city.charAt(0).toUpperCase() + product.product.product_city.slice(1) }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+                                    <!-- min offer -->
+                                    
+                                    <span class='section-search-result-element-span-offer-min header-random'>Offre minimum: {{ product.offer[product['offer'].length - 1].offer_offerprice == null ? "Libre" : product.offer[product['offer'].length - 1].offer_offerprice + "€" }}</span>
+        
+                                    <!-- -->
+        
+        
+        
+        
+        
+                                    <!-- date -->
+        
+                                    <span class='section-search-result-element-span-datetime home header-random'>{{ product.product.product_created_at }}</span>
+        
+                                    <!-- -->
+        
+                                </div>
+        
+        
+                            </a>
+        
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <span class='header-title-anchor-div-span-cross anim' (click)='handleClickCrossAnimHeader($event)' (mouseover)='handleMouseOverCross($event)' (touchstart)='handleMouseOverCross($event)'>x</span>
+
+        <img class='header-title-anchor-div-img-arrow' src='../../../assets/pictures/arrow-right-short.svg' (click)='handleClickCrossAnimHeader($event)'/>
+
+    </div>
+
+
     <!-- NAV START -->
 
     <nav class='nav'>
@@ -125,6 +211,13 @@
             </div>
 
         </h1>
+
+        <!-- <div class='header-title-anchor-div'>
+            <span class='header-title-anchor-div-span'>Tous produits,</span>
+            <span class='header-title-anchor-div-span'>Toutes catégories!</span>
+
+            <span class='header-title-anchor-div-span-cross'>x</span>
+        </div> -->
     </a>
 
 
@@ -168,7 +261,7 @@
 
                 <div class='header-div-searchbar-div-wrap'>
 
-                    <input type='search' class='header-div-searchbar-div-input' name='header-div-searchbar-div-input' id='header-div-searchbar-div-input' placeholder='Rechercher un produit' (keydown)='handleKeyDownSearch($event)'/>
+                    <input type='search' class='header-div-searchbar-div-input' name='header-div-searchbar-div-input' id='header-div-searchbar-div-input' placeholder='Rechercher un produit' (keydown)='this.appService.handleKeyDownSearch($event)' (pointerdown)='handleClickInputSearch($event)'/>
 
                     <span class='header-div-searchbar-div-span-fake'></span>
 

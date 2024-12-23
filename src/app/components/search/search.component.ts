@@ -3,24 +3,119 @@ import { CommonModule } from '@angular/common';
 import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-search',
     standalone: true,
     imports: [CommonModule,
-              RouterModule],
+              RouterModule,
+              LoaderComponent],
     templateUrl: './search.component.html',
     styleUrl: './search.component.css'
 })
 
 export class SearchComponent {
 
+
+
+
+
     constructor(public appService: AppService, private router: Router) {
+
+        //this.appService.inactiveLoader();
 
         this.appService.manageInterval();
 
-        this.objectToArrayFunction(this.appService.searchResult);
+        this.appService.objectToArrayFunction(this.appService.searchResult, true);
+
+
+
+
+        // INFINITE SCROLLING => scroll listener infinite scrolling //
+
+
+
+        window.addEventListener('scroll', this.appService.scrollLoadDataParameter);
+
+        // INFINITE SCROLLING //
+
+
+
+        this.checkVisibility();
+        
+
     }
+
+    checkVisibility() {
+
+        
+
+        let timerInterval = setInterval(() => {
+
+            const divFilterSort = (document.getElementsByClassName('section-search-filter-button-div')[0] as HTMLDivElement);
+
+            if (typeof divFilterSort !== undefined) {
+
+                clearInterval(timerInterval);
+
+                scrollDetection(divFilterSort);
+            }
+        }, 50);
+
+
+
+
+
+
+        
+
+
+
+        
+
+        const scrollDetection = (element: HTMLElement) => {
+
+            // let observer = new IntersectionObserver((entries, observer) => {
+
+            //     entries.forEach(entry => {
+    
+            //         if (entry.isIntersecting) {
+    
+            //             //element.classList.remove('active');
+            //             console.log('pas coucou');
+            //         }
+
+            //         else {
+
+            //             element.classList.add('active');
+            //             console.log('coucou');
+            //         }
+            //     });
+            // }, {
+            //     root: null,
+            //     rootMargin: '0px',
+            //     threshold: 1
+            // });
+    
+            // observer.observe(element);
+
+
+            
+
+
+            // TODO => scroll listener to prevent bug intersection observer //
+
+            window.addEventListener('scroll', this.appService.scrollFilterBox);
+        };
+    }
+
+
+
+
+
+
+
 
     handleClickFilter(e: MouseEvent, button_action: string) {
 
@@ -140,55 +235,58 @@ export class SearchComponent {
 
 
 
-
-
-        await this.handleKeyDownSearch();
-
+        await this.appService.activeLoader();
 
 
 
+        // e as argument => method accept e as instance of KeyboardEvent or SubmitEvent //
+        this.appService.handleKeyDownSearch(e);
 
-
-        if (city.value.trim().length == 0 && zip.value.trim().length == 0) {
-
-            console.log(minOffer.value);
-            console.log(maxOffer.value);
-
-            const minOfferFinal = minOffer.value;
-            const maxOfferFinal = maxOffer.value;
+        // await this.handleKeyDownSearch();
 
 
 
 
 
 
+        // if (city.value.trim().length == 0 && zip.value.trim().length == 0) {
 
-            let delivery = null;
+        //     console.log(minOffer.value);
+        //     console.log(maxOffer.value);
 
-            for (let i = 0; i < deliveryInputRadio.length; i++) {
+        //     const minOfferFinal = minOffer.value;
+        //     const maxOfferFinal = maxOffer.value;
 
-                if (deliveryInputRadio[i].checked) {
+
+
+
+
+
+
+        //     let delivery = null;
+
+        //     for (let i = 0; i < deliveryInputRadio.length; i++) {
+
+        //         if (deliveryInputRadio[i].checked) {
     
-                    delivery = (deliveryInputRadio[i].id.replace('search-filter-input-delivery-', ''));
-                }
-            }
+        //             delivery = (deliveryInputRadio[i].id.replace('search-filter-input-delivery-', ''));
+        //         }
+        //     }
 
 
 
 
 
 
-            let newProduct = null;
+        //     let newProduct = null;
 
-            for (let i = 0; i < newProductInputRadio.length; i++) {
+        //     for (let i = 0; i < newProductInputRadio.length; i++) {
 
-                if (newProductInputRadio[i].checked) {
+        //         if (newProductInputRadio[i].checked) {
 
-                    newProduct = (newProductInputRadio[i].id.replace('search-filter-input-new-', ''));
-                }
-            }
-
-
+        //             newProduct = (newProductInputRadio[i].id.replace('search-filter-input-new-', ''));
+        //         }
+        //     }
 
 
 
@@ -196,25 +294,27 @@ export class SearchComponent {
 
 
 
-            //--- FILTER RESULT ---//
 
 
-            if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal == '')) {
+        //     //--- FILTER RESULT ---//
+
+
+        //     if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal == '')) {
 
 
 
-                let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) > 0);
+        //         let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) > 0);
 
 
-                if (delivery == 'yes') {
+        //         if (delivery == 'yes') {
 
-                    result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                }
+        //             result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //         }
 
-                else if (delivery == 'no') {
+        //         else if (delivery == 'no') {
 
-                    result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                }
+        //             result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //         }
 
                 
                 
@@ -222,39 +322,39 @@ export class SearchComponent {
 
 
 
-                if (newProduct == 'yes') {
+        //         if (newProduct == 'yes') {
 
-                    /* keep product -48h created */
+        //             /* keep product -48h created */
 
-                    result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                }
+        //             result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //         }
 
-                else if (newProduct == 'no') {
+        //         else if (newProduct == 'no') {
 
-                    result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                }
-
-
+        //             result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //         }
 
 
 
 
-                // category filter //
-
-                if (selectCategory.value !== 'all') {
-
-                    result = result.filter((elem: any) => 
-
-                        Number(elem.product.product_category_id) == Number(selectCategory.value)
-                    );
-                }
 
 
-                this.appService.searchResultKept = result.slice();
+        //         // category filter //
 
-                //
-                this.appService.searchResultKeptSortOffer = result.slice();
-            }
+        //         if (selectCategory.value !== 'all') {
+
+        //             result = result.filter((elem: any) => 
+
+        //                 Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //             );
+        //         }
+
+
+        //         this.appService.searchResultKept = result.slice();
+
+        //         //
+        //         this.appService.searchResultKeptSortOffer = result.slice();
+        //     }
 
 
 
@@ -263,24 +363,24 @@ export class SearchComponent {
 
 
             
-            if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal.trim().length > 0)) {
+        //     if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal.trim().length > 0)) {
 
 
 
-                let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
+        //         let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
 
 
 
 
-                if (delivery == 'yes') {
+        //         if (delivery == 'yes') {
 
-                    result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                }
+        //             result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //         }
 
-                else if (delivery == 'no') {
+        //         else if (delivery == 'no') {
 
-                    result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                }
+        //             result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //         }
 
                 
                 
@@ -288,120 +388,41 @@ export class SearchComponent {
 
 
 
-                if (newProduct == 'yes') {
+        //         if (newProduct == 'yes') {
 
-                    /* keep product -48h created */
+        //             /* keep product -48h created */
 
-                    result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                }
+        //             result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //         }
 
-                else if (newProduct == 'no') {
+        //         else if (newProduct == 'no') {
 
-                    result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                }
-
-
-
-
-
-
-                // category filter //
-
-                if (selectCategory.value !== 'all') {
-
-                    result = result.filter((elem: any) => 
-
-                        Number(elem.product.product_category_id) == Number(selectCategory.value)
-                    );
-                }
-
-
-
-
-                this.appService.searchResultKept = result.slice();
-
-                //
-                this.appService.searchResultKeptSortOffer = result.slice();
-            }
+        //             result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //         }
 
 
 
 
 
 
+        //         // category filter //
+
+        //         if (selectCategory.value !== 'all') {
+
+        //             result = result.filter((elem: any) => 
+
+        //                 Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //             );
+        //         }
 
 
-            if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length == 0)) {
 
 
-                if (!isNaN(Number(minOfferFinal.trim()))) {
+        //         this.appService.searchResultKept = result.slice();
 
-
-
-                    let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()));
-
-                    
-                    if (delivery == 'yes') {
-
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                    }
-    
-                    else if (delivery == 'no') {
-    
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                    }
-    
-                    
-                    
-    
-    
-    
-    
-                    if (newProduct == 'yes') {
-    
-                        /* keep product -48h created */
-    
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                    }
-    
-                    else if (newProduct == 'no') {
-    
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                    }
-    
-    
-    
-    
-    
-    
-                    // category filter //
-    
-                    if (selectCategory.value !== 'all') {
-    
-                        result = result.filter((elem: any) => 
-    
-                            Number(elem.product.product_category_id) == Number(selectCategory.value)
-                        );
-                    }
-    
-    
-    
-    
-                    this.appService.searchResultKept = result.slice();
-    
-                    //
-                    this.appService.searchResultKeptSortOffer = result.slice();
-                }
-
-                else if (isNaN(Number(minOfferFinal.trim()))) {
-
-                    minOffer.focus();
-
-                    return;
-                }
-
-
-            }
+        //         //
+        //         this.appService.searchResultKeptSortOffer = result.slice();
+        //     }
 
 
 
@@ -410,28 +431,25 @@ export class SearchComponent {
 
 
 
+        //     if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length == 0)) {
 
 
-            if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length > 0)) {
+        //         if (!isNaN(Number(minOfferFinal.trim()))) {
 
 
-                if (!isNaN(Number(minOfferFinal.trim())) && !isNaN(Number(maxOfferFinal.trim()))) {
 
-
-                    let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
-
-                    console.log(result);
+        //             let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()));
 
                     
-                    if (delivery == 'yes') {
+        //             if (delivery == 'yes') {
 
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                    }
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //             }
     
-                    else if (delivery == 'no') {
+        //             else if (delivery == 'no') {
     
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                    }
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //             }
     
                     
                     
@@ -439,65 +457,51 @@ export class SearchComponent {
     
     
     
-                    if (newProduct == 'yes') {
+        //             if (newProduct == 'yes') {
     
-                        /* keep product -48h created */
+        //                 /* keep product -48h created */
     
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                    }
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //             }
     
-                    else if (newProduct == 'no') {
+        //             else if (newProduct == 'no') {
     
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                    }
-    
-    
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //             }
     
     
     
     
-                    // category filter //
-    
-                    if (selectCategory.value !== 'all') {
-    
-                        result = result.filter((elem: any) => 
-    
-                            Number(elem.product.product_category_id) == Number(selectCategory.value)
-                        );
-                    }
     
     
+        //             // category filter //
+    
+        //             if (selectCategory.value !== 'all') {
+    
+        //                 result = result.filter((elem: any) => 
+    
+        //                     Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                 );
+        //             }
     
     
-                    this.appService.searchResultKept = result.slice();
     
-                    //
-                    this.appService.searchResultKeptSortOffer = result.slice();
-                }
+    
+        //             this.appService.searchResultKept = result.slice();
+    
+        //             //
+        //             this.appService.searchResultKeptSortOffer = result.slice();
+        //         }
 
-                else if (isNaN(Number(minOfferFinal.trim()))) {
+        //         else if (isNaN(Number(minOfferFinal.trim()))) {
 
-                    minOffer.focus();
+        //             minOffer.focus();
 
-                    return;
-                }
-
-                else if (isNaN(Number(maxOfferFinal.trim()))) {
-
-                    maxOffer.focus();
-
-                    return;
-                }
+        //             return;
+        //         }
 
 
-            }
-
-
-
-
-
-            crossFilter.click();
-        }
+        //     }
 
 
 
@@ -507,25 +511,121 @@ export class SearchComponent {
 
 
 
-        /*--- EMPTY CITY INPUT BUT ZIP NOT EMPTY ---*/
 
-        if (city.value.trim().length == 0) {
-
-            if (zip.value.trim().length > 0) {
+        //     if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length > 0)) {
 
 
+        //         if (!isNaN(Number(minOfferFinal.trim())) && !isNaN(Number(maxOfferFinal.trim()))) {
 
-                city.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--backgroundError');
-                city.placeholder = 'Ville';
-                city.focus();
 
-                filterSection.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+        //             let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
+
+        //             console.log(result);
+
+                    
+        //             if (delivery == 'yes') {
+
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //             }
+    
+        //             else if (delivery == 'no') {
+    
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //             }
+    
+                    
+                    
+    
+    
+    
+    
+        //             if (newProduct == 'yes') {
+    
+        //                 /* keep product -48h created */
+    
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //             }
+    
+        //             else if (newProduct == 'no') {
+    
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //             }
+    
+    
+    
+    
+    
+    
+        //             // category filter //
+    
+        //             if (selectCategory.value !== 'all') {
+    
+        //                 result = result.filter((elem: any) => 
+    
+        //                     Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                 );
+        //             }
+    
+    
+    
+    
+        //             this.appService.searchResultKept = result.slice();
+    
+        //             //
+        //             this.appService.searchResultKeptSortOffer = result.slice();
+        //         }
+
+        //         else if (isNaN(Number(minOfferFinal.trim()))) {
+
+        //             minOffer.focus();
+
+        //             return;
+        //         }
+
+        //         else if (isNaN(Number(maxOfferFinal.trim()))) {
+
+        //             maxOffer.focus();
+
+        //             return;
+        //         }
+
+
+        //     }
+
+
+
+
+
+        //     crossFilter.click();
+        // }
+
+
+
+
+
+
+
+
+
+        // /*--- EMPTY CITY INPUT BUT ZIP NOT EMPTY ---*/
+
+        // if (city.value.trim().length == 0) {
+
+        //     if (zip.value.trim().length > 0) {
+
+
+
+        //         city.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--backgroundError');
+        //         city.placeholder = 'Ville';
+        //         city.focus();
+
+        //         filterSection.scrollTo({
+        //             top: 0,
+        //             behavior: 'smooth'
+        //         });
                 
-            }
-        }
+        //     }
+        // }
 
 
 
@@ -534,314 +634,314 @@ export class SearchComponent {
 
 
 
-        /*--- NOT EMPTY CITY ---*/
+        // /*--- NOT EMPTY CITY ---*/
 
-        if (city.value.trim().length > 0) {
+        // if (city.value.trim().length > 0) {
 
-            if (zip.value.trim().length == 0) {
+        //     if (zip.value.trim().length == 0) {
 
-                zip.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--backgroundError');
-                zip.placeholder = 'Code postal';
-                zip.focus();
+        //         zip.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--backgroundError');
+        //         zip.placeholder = 'Code postal';
+        //         zip.focus();
 
-                filterSection.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
+        //         filterSection.scrollTo({
+        //             top: 0,
+        //             behavior: 'smooth'
+        //         });
+        //     }
 
-            else if (zip.value.trim().length > 0) {
-
-                
-                console.log(city.value);
-                console.log(zip.value);
-
-
-
-                let latitude = null;
-                let longitude = null;
-
-
-
-
-                // check if city in database //
-
-                const responseCheckCityDatabase = await fetch(`${this.appService.hostname}/api/checkcity`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        city: city.value.trim(),
-                        zip: zip.value.trim()
-                    })
-                });
-
-                const responseDataCheckCityDatabase = await responseCheckCityDatabase.json();
-
-
-
-
-                // if city found in database //
-
-                if (responseDataCheckCityDatabase.checkCity.length > 0) {
-
-                    console.log(responseDataCheckCityDatabase.checkCity[0]['latitude']);
-                    console.log(responseDataCheckCityDatabase.checkCity[0]['longitude']);
-                    console.log('FOUND!');
-
-                    latitude = responseDataCheckCityDatabase.checkCity[0]['latitude'];
-                    longitude = responseDataCheckCityDatabase.checkCity[0]['longitude'];
-                }
-
-
-
-                // if city NOT found in database //
-
-                else if (responseDataCheckCityDatabase.checkCity.length == 0) {
-
-                    console.log('NOT FOUND!');
-
-
-
-                    // get coordinates from city //
-
-                    const responseCityCoordinatesBack = await fetch(`${this.appService.hostname}/api/getcoordinates/city/${city.value.trim()}/zip/${zip.value.trim()}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-type': 'application/json'
-                        }
-                    });
-
-                    const responseDataCityCoordinatesBack = await responseCityCoordinatesBack.json();
-
-                    latitude = responseDataCityCoordinatesBack.latitude;
-                    longitude = responseDataCityCoordinatesBack.longitude;
-
-
-
-
-
-
-                    const responseCityInsert = await fetch(`${this.appService.hostname}/api/insertcity`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            city: city.value.trim(),
-                            zip: zip.value.trim(),
-                            latitude: latitude,
-                            longitude: longitude
-                        })
-                    });
-
-                    const responseDataCityInsert = await responseCityInsert.json();
-
-                    console.log(responseDataCityInsert);
-                }
-
-
-
-
-
-
-
-
-
-
-
-
-                /*--- GET DISTANCE BETWEEN USER INPUT AND EACH PRODUCT ---*/
-
-                const responseDistance = await fetch(`${this.appService.hostname}/api/getdistance`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        latitudeInput: latitude,
-                        longitudeInput: longitude
-                    })
-                })
-
-
-                const responseDataDistance = await responseDistance.json();
-
-                console.log(responseDataDistance);
-                console.log(this.appService.searchResultKept);
-                console.log(radiusValue[Number(radius.value)]);
-
-
-
-
-
-
-
-                /*--- FILTER KEEP DISTANCE RESULT ONLY ---*/
-
-                const searchResultKeptDistanceFilter = [];
-
-                for (let i = 0; i < this.appService.searchResultKept.length; i++) {
-
-
-
-                    for (let y = 0; y < responseDataDistance.result.length; y++) {
-
-
-
-                        if (this.appService.searchResultKept[i].product.product_id == responseDataDistance.result[y].product_id) {
-
-                            if (responseDataDistance.result[y].product_distance <= radiusValue[Number(radius.value)]) {
-
-                                searchResultKeptDistanceFilter.push(this.appService.searchResultKept[i]);
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-
-
-                this.appService.searchResultKept = searchResultKeptDistanceFilter.slice();
-
-                //
-                this.appService.searchResultKeptSortOffer = searchResultKeptDistanceFilter.slice();
-
-
-
-
-
-
-                const minOfferFinal = minOffer.value;
-                const maxOfferFinal = maxOffer.value;
-
-
-
-
-                let delivery = null;
-
-                for (let i = 0; i < deliveryInputRadio.length; i++) {
-
-                    if (deliveryInputRadio[i].checked) {
-        
-                        delivery = (deliveryInputRadio[i].id.replace('search-filter-input-delivery-', ''));
-                    }
-                }
-
-
-
-
-
-
-                let newProduct = null;
-
-                for (let i = 0; i < newProductInputRadio.length; i++) {
-
-                    if (newProductInputRadio[i].checked) {
-
-                        newProduct = (newProductInputRadio[i].id.replace('search-filter-input-new-', ''));
-                    }
-                }
-
-
-
-
-
-
-
-
-
-
-                //--- FILTER RESULT ---//
-
-
-                if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal == '')) {
-
-                    
-
-                    let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) > 0);
-
-
-
-                    if (delivery == 'yes') {
-
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                    }
-
-                    else if (delivery == 'no') {
-
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                    }
-
-                    
-                    
-
-
-
-
-                    if (newProduct == 'yes') {
-
-                        /* keep product -48h created */
-
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                    }
-
-                    else if (newProduct == 'no') {
-
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                    }
-
-
-
-
-
-
-
-                    // category filter //
-
-                    if (selectCategory.value !== 'all') {
-
-                        result = result.filter((elem: any) => 
-
-                            Number(elem.product.product_category_id) == Number(selectCategory.value)
-                        );
-                    }
-
-
-                    this.appService.searchResultKept = result.slice();
-
-                    //
-                    this.appService.searchResultKeptSortOffer = result.slice();
-                }
-
-
-
-
-
-
+        //     else if (zip.value.trim().length > 0) {
 
                 
-                if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal.trim().length > 0)) {
+        //         console.log(city.value);
+        //         console.log(zip.value);
+
+
+
+        //         let latitude = null;
+        //         let longitude = null;
+
+
+
+
+        //         // check if city in database //
+
+        //         const responseCheckCityDatabase = await fetch(`${this.appService.hostname}/api/checkcity`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 city: city.value.trim(),
+        //                 zip: zip.value.trim()
+        //             })
+        //         });
+
+        //         const responseDataCheckCityDatabase = await responseCheckCityDatabase.json();
+
+
+
+
+        //         // if city found in database //
+
+        //         if (responseDataCheckCityDatabase.checkCity.length > 0) {
+
+        //             console.log(responseDataCheckCityDatabase.checkCity[0]['latitude']);
+        //             console.log(responseDataCheckCityDatabase.checkCity[0]['longitude']);
+        //             console.log('FOUND!');
+
+        //             latitude = responseDataCheckCityDatabase.checkCity[0]['latitude'];
+        //             longitude = responseDataCheckCityDatabase.checkCity[0]['longitude'];
+        //         }
+
+
+
+        //         // if city NOT found in database //
+
+        //         else if (responseDataCheckCityDatabase.checkCity.length == 0) {
+
+        //             console.log('NOT FOUND!');
+
+
+
+        //             // get coordinates from city //
+
+        //             const responseCityCoordinatesBack = await fetch(`${this.appService.hostname}/api/getcoordinates/city/${city.value.trim()}/zip/${zip.value.trim()}`, {
+        //                 method: 'GET',
+        //                 headers: {
+        //                     'Content-type': 'application/json'
+        //                 }
+        //             });
+
+        //             const responseDataCityCoordinatesBack = await responseCityCoordinatesBack.json();
+
+        //             latitude = responseDataCityCoordinatesBack.latitude;
+        //             longitude = responseDataCityCoordinatesBack.longitude;
+
+
+
+
+
+
+        //             const responseCityInsert = await fetch(`${this.appService.hostname}/api/insertcity`, {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify({
+        //                     city: city.value.trim(),
+        //                     zip: zip.value.trim(),
+        //                     latitude: latitude,
+        //                     longitude: longitude
+        //                 })
+        //             });
+
+        //             const responseDataCityInsert = await responseCityInsert.json();
+
+        //             console.log(responseDataCityInsert);
+        //         }
+
+
+
+
+
+
+
+
+
+
+
+
+        //         /*--- GET DISTANCE BETWEEN USER INPUT AND EACH PRODUCT ---*/
+
+        //         const responseDistance = await fetch(`${this.appService.hostname}/api/getdistance`, {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 latitudeInput: latitude,
+        //                 longitudeInput: longitude
+        //             })
+        //         })
+
+
+        //         const responseDataDistance = await responseDistance.json();
+
+        //         console.log(responseDataDistance);
+        //         console.log(this.appService.searchResultKept);
+        //         console.log(radiusValue[Number(radius.value)]);
+
+
+
+
+
+
+
+        //         /*--- FILTER KEEP DISTANCE RESULT ONLY ---*/
+
+        //         const searchResultKeptDistanceFilter = [];
+
+        //         for (let i = 0; i < this.appService.searchResultKept.length; i++) {
+
+
+
+        //             for (let y = 0; y < responseDataDistance.result.length; y++) {
+
+
+
+        //                 if (this.appService.searchResultKept[i].product.product_id == responseDataDistance.result[y].product_id) {
+
+        //                     if (responseDataDistance.result[y].product_distance <= radiusValue[Number(radius.value)]) {
+
+        //                         searchResultKeptDistanceFilter.push(this.appService.searchResultKept[i]);
+        //                     }
+
+        //                     break;
+        //                 }
+        //             }
+        //         }
+
+
+
+        //         this.appService.searchResultKept = searchResultKeptDistanceFilter.slice();
+
+        //         //
+        //         this.appService.searchResultKeptSortOffer = searchResultKeptDistanceFilter.slice();
+
+
+
+
+
+
+        //         const minOfferFinal = minOffer.value;
+        //         const maxOfferFinal = maxOffer.value;
+
+
+
+
+        //         let delivery = null;
+
+        //         for (let i = 0; i < deliveryInputRadio.length; i++) {
+
+        //             if (deliveryInputRadio[i].checked) {
+        
+        //                 delivery = (deliveryInputRadio[i].id.replace('search-filter-input-delivery-', ''));
+        //             }
+        //         }
+
+
+
+
+
+
+        //         let newProduct = null;
+
+        //         for (let i = 0; i < newProductInputRadio.length; i++) {
+
+        //             if (newProductInputRadio[i].checked) {
+
+        //                 newProduct = (newProductInputRadio[i].id.replace('search-filter-input-new-', ''));
+        //             }
+        //         }
+
+
+
+
+
+
+
+
+
+
+        //         //--- FILTER RESULT ---//
+
+
+        //         if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal == '')) {
+
+                    
+
+        //             let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) > 0);
+
+
+
+        //             if (delivery == 'yes') {
+
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //             }
+
+        //             else if (delivery == 'no') {
+
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //             }
+
+                    
+                    
+
+
+
+
+        //             if (newProduct == 'yes') {
+
+        //                 /* keep product -48h created */
+
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //             }
+
+        //             else if (newProduct == 'no') {
+
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //             }
+
+
+
+
+
+
+
+        //             // category filter //
+
+        //             if (selectCategory.value !== 'all') {
+
+        //                 result = result.filter((elem: any) => 
+
+        //                     Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                 );
+        //             }
+
+
+        //             this.appService.searchResultKept = result.slice();
+
+        //             //
+        //             this.appService.searchResultKeptSortOffer = result.slice();
+        //         }
+
+
+
+
+
+
+
+                
+        //         if ((minOfferFinal == '' || minOfferFinal == '0') && (maxOfferFinal.trim().length > 0)) {
 
 
                     
 
-                    let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
+        //             let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
 
 
 
 
-                    if (delivery == 'yes') {
+        //             if (delivery == 'yes') {
 
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                    }
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //             }
 
-                    else if (delivery == 'no') {
+        //             else if (delivery == 'no') {
 
-                        result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                    }
+        //                 result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //             }
 
                     
                     
@@ -849,43 +949,41 @@ export class SearchComponent {
 
 
 
-                    if (newProduct == 'yes') {
+        //             if (newProduct == 'yes') {
 
-                        /* keep product -48h created */
+        //                 /* keep product -48h created */
 
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                    }
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //             }
 
-                    else if (newProduct == 'no') {
+        //             else if (newProduct == 'no') {
 
-                        result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                    }
-
-
+        //                 result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //             }
 
 
 
 
-                    // category filter //
-
-                    if (selectCategory.value !== 'all') {
-
-                        result = result.filter((elem: any) => 
-
-                            Number(elem.product.product_category_id) == Number(selectCategory.value)
-                        );
-                    }
 
 
+        //             // category filter //
+
+        //             if (selectCategory.value !== 'all') {
+
+        //                 result = result.filter((elem: any) => 
+
+        //                     Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                 );
+        //             }
 
 
-                    this.appService.searchResultKept = result.slice();
-
-                    //
-                    this.appService.searchResultKeptSortOffer = result.slice();
-                }
 
 
+        //             this.appService.searchResultKept = result.slice();
+
+        //             //
+        //             this.appService.searchResultKeptSortOffer = result.slice();
+        //         }
 
 
 
@@ -903,108 +1001,27 @@ export class SearchComponent {
 
 
 
-                if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length == 0)) {
 
 
-                    if (!isNaN(Number(minOfferFinal.trim()))) {
+        //         if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length == 0)) {
+
+
+        //             if (!isNaN(Number(minOfferFinal.trim()))) {
     
 
     
-                        let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()));
-    
-                        
-                        if (delivery == 'yes') {
-    
-                            result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                        }
-        
-                        else if (delivery == 'no') {
-        
-                            result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                        }
-        
-                        
-                        
-        
-        
-        
-        
-                        if (newProduct == 'yes') {
-        
-                            /* keep product -48h created */
-        
-                            result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                        }
-        
-                        else if (newProduct == 'no') {
-        
-                            result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                        }
-        
-        
-        
-        
-        
-        
-                        // category filter //
-        
-                        if (selectCategory.value !== 'all') {
-        
-                            result = result.filter((elem: any) => 
-        
-                                Number(elem.product.product_category_id) == Number(selectCategory.value)
-                            );
-                        }
-        
-        
-        
-        
-                        this.appService.searchResultKept = result.slice();
-        
-                        //
-                        this.appService.searchResultKeptSortOffer = result.slice();
-                    }
-    
-                    else if (isNaN(Number(minOfferFinal.trim()))) {
-    
-                        minOffer.focus();
-    
-                        return;
-                    }
-    
-    
-                }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-                if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length > 0)) {
-    
-    
-                    if (!isNaN(Number(minOfferFinal.trim())) && !isNaN(Number(maxOfferFinal.trim()))) {
-    
-
-    
-                        let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
-    
-                        console.log(result);
+        //                 let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()));
     
                         
-                        if (delivery == 'yes') {
+        //                 if (delivery == 'yes') {
     
-                            result = result.filter((elem: any) => elem.product.product_delivery == 'true');
-                        }
+        //                     result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //                 }
         
-                        else if (delivery == 'no') {
+        //                 else if (delivery == 'no') {
         
-                            result = result.filter((elem: any) => elem.product.product_delivery == 'false');
-                        }
+        //                     result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //                 }
         
                         
                         
@@ -1012,116 +1029,199 @@ export class SearchComponent {
         
         
         
-                        if (newProduct == 'yes') {
+        //                 if (newProduct == 'yes') {
         
-                            /* keep product -48h created */
+        //                     /* keep product -48h created */
         
-                            result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
-                        }
+        //                     result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //                 }
         
-                        else if (newProduct == 'no') {
+        //                 else if (newProduct == 'no') {
         
-                            result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
-                        }
-        
-        
+        //                     result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //                 }
         
         
         
         
-                        // category filter //
-        
-                        if (selectCategory.value !== 'all') {
-        
-                            result = result.filter((elem: any) => 
-        
-                                Number(elem.product.product_category_id) == Number(selectCategory.value)
-                            );
-                        }
         
         
+        //                 // category filter //
+        
+        //                 if (selectCategory.value !== 'all') {
+        
+        //                     result = result.filter((elem: any) => 
+        
+        //                         Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                     );
+        //                 }
         
         
-                        this.appService.searchResultKept = result.slice();
         
-                        //
-                        this.appService.searchResultKeptSortOffer = result.slice();
-                    }
+        
+        //                 this.appService.searchResultKept = result.slice();
+        
+        //                 //
+        //                 this.appService.searchResultKeptSortOffer = result.slice();
+        //             }
     
-                    else if (isNaN(Number(minOfferFinal.trim()))) {
+        //             else if (isNaN(Number(minOfferFinal.trim()))) {
     
-                        minOffer.focus();
+        //                 minOffer.focus();
     
-                        return;
-                    }
-    
-                    else if (isNaN(Number(maxOfferFinal.trim()))) {
-    
-                        maxOffer.focus();
-    
-                        return;
-                    }
+        //                 return;
+        //             }
     
     
-                }
+        //         }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        //         if ((minOfferFinal.trim().length > 0) && (maxOfferFinal.trim().length > 0)) {
+    
+    
+        //             if (!isNaN(Number(minOfferFinal.trim())) && !isNaN(Number(maxOfferFinal.trim()))) {
+    
+
+    
+        //                 let result = this.appService.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
+    
+        //                 console.log(result);
+    
+                        
+        //                 if (delivery == 'yes') {
+    
+        //                     result = result.filter((elem: any) => elem.product.product_delivery == 'true');
+        //                 }
+        
+        //                 else if (delivery == 'no') {
+        
+        //                     result = result.filter((elem: any) => elem.product.product_delivery == 'false');
+        //                 }
+        
+                        
+                        
+        
+        
+        
+        
+        //                 if (newProduct == 'yes') {
+        
+        //                     /* keep product -48h created */
+        
+        //                     result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) <= 172800000 /* 48h */);
+        //                 }
+        
+        //                 else if (newProduct == 'no') {
+        
+        //                     result = result.filter((elem: any) => ((new Date(this.appService.getCurrentDateTime()).getTime() - new Date(elem.product.product_created_at).getTime())) > 172800000 /* 48h */);
+        //                 }
+        
+        
+        
+        
+        
+        
+        //                 // category filter //
+        
+        //                 if (selectCategory.value !== 'all') {
+        
+        //                     result = result.filter((elem: any) => 
+        
+        //                         Number(elem.product.product_category_id) == Number(selectCategory.value)
+        //                     );
+        //                 }
+        
+        
+        
+        
+        //                 this.appService.searchResultKept = result.slice();
+        
+        //                 //
+        //                 this.appService.searchResultKeptSortOffer = result.slice();
+        //             }
+    
+        //             else if (isNaN(Number(minOfferFinal.trim()))) {
+    
+        //                 minOffer.focus();
+    
+        //                 return;
+        //             }
+    
+        //             else if (isNaN(Number(maxOfferFinal.trim()))) {
+    
+        //                 maxOffer.focus();
+    
+        //                 return;
+        //             }
+    
+    
+        //         }
 
 
 
 
 
-                crossFilter.click();
+        //         crossFilter.click();
 
 
-            }
-        }
+        //     }
+        // }
 
 
 
 
 
-        for (const product of this.appService.searchResultKeptSortOffer) {
+        // for (const product of this.appService.searchResultKeptSortOffer) {
 
-            product['offer'] = product['offer'].slice().sort((a: any, b: any) => {
+        //     product['offer'] = product['offer'].slice().sort((a: any, b: any) => {
 
-                if (a.offer_created_at < b.offer_created_at) {
-                    return 1;
-                }
+        //         if (a.offer_created_at < b.offer_created_at) {
+        //             return 1;
+        //         }
 
-                else if (a.offer_created_at > b.offer_created_at) {
-                    return -1;
-                }
-                return 0;
-            })
-        }
+        //         else if (a.offer_created_at > b.offer_created_at) {
+        //             return -1;
+        //         }
+        //         return 0;
+        //     })
+        // }
 
         
 
 
 
-        for (const product of this.appService.searchResultKeptSortOffer) {
+        // for (const product of this.appService.searchResultKeptSortOffer) {
 
-            let product_user_id = product['product']['product_user_id'];
-
-
-
-            let max_offer = 0;
-
-            for (const offer of product['offer']) {
-
-                if (offer.offer_user_offer !== product_user_id && offer.offer_offerprice >= max_offer ) {
-
-                    max_offer = offer.offer_offerprice;
-                }
-            }
-
-
-            product['max_offer'] = max_offer;
-        }
+        //     let product_user_id = product['product']['product_user_id'];
 
 
 
+        //     let max_offer = 0;
 
-        console.log(this.appService.searchResultKeptSortOffer);
+        //     for (const offer of product['offer']) {
+
+        //         if (offer.offer_user_offer !== product_user_id && offer.offer_offerprice >= max_offer ) {
+
+        //             max_offer = offer.offer_offerprice;
+        //         }
+        //     }
+
+
+        //     product['max_offer'] = max_offer;
+        // }
+
+
+
+
+        // console.log(this.appService.searchResultKeptSortOffer);
 
 
 
@@ -1134,39 +1234,44 @@ export class SearchComponent {
 
 
 
-    async handleKeyDownSearch() {
+    // async handleKeyDownSearch() {
 
-        const inputSearch = (document.getElementsByClassName('header-div-searchbar-div-input')[0] as HTMLInputElement);
+    //     const inputSearch = (document.getElementsByClassName('header-div-searchbar-div-input')[0] as HTMLInputElement);
 
         
 
-        const response = await fetch(`${this.appService.hostname}/api/getproducts?search=${inputSearch.value}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
+    //     const response = await fetch(`${this.appService.hostname}/api/getproducts?search=${inputSearch.value}`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         }
+    //     });
 
-        const responseData = await response.json();
-
-
+    //     const responseData = await response.json();
 
 
 
 
+    //     if (responseData.hasOwnProperty('result')) {
 
-        this.appService.searchWord = inputSearch.value;
-
-        this.appService.searchResult = Object.assign({}, responseData.result);
-
-
+    //         this.appService.inactiveLoader();
+    //     }
 
 
 
 
-        this.objectToArrayFunction(this.appService.searchResult);
+    //     this.appService.searchWord = inputSearch.value;
+
+    //     this.appService.searchResult = Object.assign({}, responseData.result);
+
+
+
+
+
+
+    //     this.objectToArrayFunction(this.appService.searchResult);
         
-    }
+    // }
 
 
 
@@ -1174,96 +1279,96 @@ export class SearchComponent {
 
 
 
-    objectToArrayFunction(obj: any) {
+    // objectToArrayFunction(obj: any) {
 
 
-        // !!RESET TO EMPTY ARRAY!! //
+    //     // !!RESET TO EMPTY ARRAY!! //
 
-        this.appService.searchResultKept = [];
-        this.appService.searchResultKeptSortOffer = [];
-
-
-
-        for (const product of Object.keys(obj)) {
-
-            this.appService.searchResultKept.push(obj[product]);
-        }
+    //     this.appService.searchResultKept = [];
+    //     this.appService.searchResultKeptSortOffer = [];
 
 
 
+    //     for (const product of Object.keys(obj)) {
 
-
-
-
-        for (const product of Object.keys(obj)) {
-
-
-            const newObj: any = {};
-
-
-
-            for (const key of Object.keys(obj[product])) {
-
-                if (key !== 'offer') {
-
-                    newObj[key] = obj[product][key];
-                }
-
-                else if (key == 'offer') {
-
-                    newObj[key] = obj[product][key].slice().sort((a: any, b: any) => {
-
-                        if (a.offer_created_at < b.offer_created_at) {
-                            return 1;
-                        }
-
-                        else if (a.offer_created_at > b.offer_created_at) {
-                            return -1;
-                        }
-                        return 0;
-                    })
-
-
-
-                }
-            }
-
-            this.appService.searchResultKeptSortOffer.push(newObj);
-
-        }
+    //         this.appService.searchResultKept.push(obj[product]);
+    //     }
 
 
 
 
 
 
-        // max offer //
+
+    //     for (const product of Object.keys(obj)) {
 
 
-        for (const product of Object.keys(obj)) {
-
-            let product_user_id = obj[product]['product']['product_user_id'];
+    //         const newObj: any = {};
 
 
 
-            let max_offer = 0;
+    //         for (const key of Object.keys(obj[product])) {
 
-            for (const offer of obj[product]['offer']) {
+    //             if (key !== 'offer') {
 
-                if (offer.offer_user_offer !== product_user_id && offer.offer_offerprice >= max_offer ) {
+    //                 newObj[key] = obj[product][key];
+    //             }
 
-                    max_offer = offer.offer_offerprice;
-                }
-            }
+    //             else if (key == 'offer') {
+
+    //                 newObj[key] = obj[product][key].slice().sort((a: any, b: any) => {
+
+    //                     if (a.offer_created_at < b.offer_created_at) {
+    //                         return 1;
+    //                     }
+
+    //                     else if (a.offer_created_at > b.offer_created_at) {
+    //                         return -1;
+    //                     }
+    //                     return 0;
+    //                 })
 
 
-            this.appService.searchResultKeptSortOffer[product]['max_offer'] = max_offer;
-        }
+
+    //             }
+    //         }
+
+    //         this.appService.searchResultKeptSortOffer.push(newObj);
+
+    //     }
 
 
-        console.log(this.appService.searchResultKept);
-        console.log(this.appService.searchResultKeptSortOffer);
-    }
+
+
+
+
+    //     // max offer //
+
+
+    //     for (const product of Object.keys(obj)) {
+
+    //         let product_user_id = obj[product]['product']['product_user_id'];
+
+
+
+    //         let max_offer = 0;
+
+    //         for (const offer of obj[product]['offer']) {
+
+    //             if (offer.offer_user_offer !== product_user_id && offer.offer_offerprice >= max_offer ) {
+
+    //                 max_offer = offer.offer_offerprice;
+    //             }
+    //         }
+
+
+    //         this.appService.searchResultKeptSortOffer[product]['max_offer'] = max_offer;
+    //     }
+
+
+    //     console.log(this.appService.searchResultKept);
+    //     console.log(this.appService.searchResultKeptSortOffer);
+    // }
 
 
 

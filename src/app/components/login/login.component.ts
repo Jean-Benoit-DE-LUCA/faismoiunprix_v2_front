@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AppService } from '../../app.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
 	selector: 'app-login',
 	standalone: true,
-	imports: [],
+	imports: [LoaderComponent],
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.css'
 })
@@ -31,6 +32,12 @@ export class LoginComponent {
 
 
 		if (email.value !== '' && password.value !== '') {
+
+			// activate loader //
+			this.appService.activeLoader();
+			//
+
+
 
 			const response = await fetch(`${this.appService.hostname}/api/finduser`, {
 				method: 'POST',
@@ -113,24 +120,39 @@ export class LoginComponent {
                         behavior: 'smooth'
                     });
 
-                    errorDivSpan.textContent = 'Utilisateur authentifié avec succès';
-
-                    errorDiv.classList.add('active_success');
 
 
+
+
+					
 
 					this.appService.timeoutRoute = setTimeout(() => {
 
-                        errorDiv.classList.remove('active_success');
+                        // deactivate loader //
+                        this.appService.inactiveLoader();
+                        //
 
-                    }, 2500);
+
+
+                        errorDivSpan.textContent = 'Utilisateur authentifié avec succès';
+
+                    	errorDiv.classList.add('active_success');
 
 
 
-                    this.appService.timeoutRoute = setTimeout(() => {
 
-                        window.location.href = '/';
-                    }, 3000);
+                        setTimeout(() => {
+
+                            errorDiv.classList.remove('active_success');
+                        }, 1500);
+
+
+                        setTimeout(() => {
+
+                            window.location.href = '/';
+                        }, 2000);
+
+                    }, 3500);
                 }
 
 
@@ -151,16 +173,40 @@ export class LoginComponent {
 							top: 0,
 							behavior: 'smooth'
 						});
-	
-						errorDivSpan.textContent = 'Mot de passe incorrect';
-	
-						errorDiv.classList.add('active_error');
-	
+
+
+
 						this.appService.timeoutRoute = setTimeout(() => {
+
+							// deactivate loader //
+							this.appService.inactiveLoader();
+							//
 	
-							errorDiv.classList.remove('active_error');
 	
-						}, 2500);
+	
+							errorDivSpan.textContent = 'Mot de passe incorrect';
+	
+							errorDiv.classList.add('active_error');
+	
+	
+	
+	
+							setTimeout(() => {
+	
+								errorDiv.classList.remove('active_error');
+							}, 2500);
+	
+						}, 1000);
+	
+						// errorDivSpan.textContent = 'Mot de passe incorrect';
+	
+						// errorDiv.classList.add('active_error');
+	
+						// this.appService.timeoutRoute = setTimeout(() => {
+	
+						// 	errorDiv.classList.remove('active_error');
+	
+						// }, 2500);
 					}
 
 
@@ -180,16 +226,29 @@ export class LoginComponent {
 							top: 0,
 							behavior: 'smooth'
 						});
-	
-						errorDivSpan.textContent = 'Utilisateur non trouvé';
-	
-						errorDiv.classList.add('active_error');
-	
+
+
 						this.appService.timeoutRoute = setTimeout(() => {
+
+							// deactivate loader //
+							this.appService.inactiveLoader();
+							//
 	
-							errorDiv.classList.remove('active_error');
 	
-						}, 2500);
+	
+							errorDivSpan.textContent = 'Utilisateur non trouvé';
+	
+							errorDiv.classList.add('active_error');
+	
+	
+	
+	
+							setTimeout(() => {
+	
+								errorDiv.classList.remove('active_error');
+							}, 2500);
+	
+						}, 1000);
 					}
 				}
             }

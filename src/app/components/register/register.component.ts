@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AppService } from '../../app.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [],
+    imports: [LoaderComponent],
     templateUrl: './register.component.html',
     styleUrl: './register.component.css'
 })
@@ -50,6 +51,15 @@ export class RegisterComponent {
             )
         {
 
+            this.appService.timeoutRoute = setTimeout(() => {
+
+                // activate loader //
+                this.appService.activeLoader();
+                //
+            }, 1000);
+            
+
+
             const response = await fetch(`${this.appService.hostname}/api/register`, {
                 method: 'POST',
                 headers: {
@@ -92,24 +102,57 @@ export class RegisterComponent {
                         behavior: 'smooth'
                     });
 
-                    errorDivSpan.textContent = 'Utilisateur enregistré avec succès';
-
-                    errorDiv.classList.add('active_success');
-
-
-
-					this.appService.timeoutRoute = setTimeout(() => {
-
-                        errorDiv.classList.remove('active_success');
-
-                    }, 2500);
 
 
 
                     this.appService.timeoutRoute = setTimeout(() => {
 
-                        window.location.href = '/';
-                    }, 3000);
+                        // deactivate loader //
+                        this.appService.inactiveLoader();
+                        //
+
+
+
+                        errorDivSpan.textContent = 'Utilisateur enregistré avec succès';
+
+                        errorDiv.classList.add('active_success');
+
+
+
+
+                        setTimeout(() => {
+
+                            errorDiv.classList.remove('active_success');
+                        }, 1500);
+
+
+                        setTimeout(() => {
+
+                            window.location.href = '/';
+                        }, 2000);
+
+                    }, 3500);
+
+
+
+                    // errorDivSpan.textContent = 'Utilisateur enregistré avec succès';
+
+                    // errorDiv.classList.add('active_success');
+
+
+
+					// this.appService.timeoutRoute = setTimeout(() => {
+
+                    //     errorDiv.classList.remove('active_success');
+
+                    // }, 1500);
+
+
+
+                    // this.appService.timeoutRoute = setTimeout(() => {
+
+                    //     window.location.href = '/';
+                    // }, 3000);
                 }
 
 

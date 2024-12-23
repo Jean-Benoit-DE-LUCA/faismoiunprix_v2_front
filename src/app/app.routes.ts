@@ -12,6 +12,9 @@ import { MyofferComponent } from './components/myoffer/myoffer.component';
 import { MymessageComponent } from './components/mymessage/mymessage.component';
 import { ProducteditComponent } from './components/myaccount/productedit/productedit.component';
 import { LegalNoticeComponent } from './components/legal-notice/legal-notice.component';
+import { CookiesComponent } from './components/cookies/cookies.component';
+import { PrivacyPolicyComponent } from './components/privacy-policy/privacy-policy.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 export const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -25,5 +28,8 @@ export const routes: Routes = [
     {path: 'product/:id', component: ProductComponent},
     {path: 'myoffer', component: MyofferComponent},
     {path: 'mymessage', component: MymessageComponent},
-    {path: 'legal-notice', component: LegalNoticeComponent}
+    {path: 'legal-notice', component: LegalNoticeComponent},
+    {path: 'cookies', component: CookiesComponent},
+    {path: 'privacy-policy', component: PrivacyPolicyComponent},
+    {path: 'contact', component: ContactComponent}
 ];

@@ -3,17 +3,16 @@ import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-legal-notice',
+    selector: 'app-privacy-policy',
     standalone: true,
     imports: [],
-    templateUrl: './legal-notice.component.html',
-    styleUrl: './legal-notice.component.css'
+    templateUrl: './privacy-policy.component.html',
+    styleUrl: './privacy-policy.component.css'
 })
-
-export class LegalNoticeComponent {
+export class PrivacyPolicyComponent {
 
     constructor(public appService: AppService, private router: Router) {
-
+        
         window.scrollTo({
             top: 0,
             behavior: 'instant'

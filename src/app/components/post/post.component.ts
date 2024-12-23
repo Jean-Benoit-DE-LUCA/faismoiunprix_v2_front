@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
+import { LoaderComponent } from '../loader/loader.component';
 
 export interface PostData {
     title: string;
@@ -23,7 +24,9 @@ export interface PostData {
 @Component({
     selector: 'app-post',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule,
+              LoaderComponent
+    ],
     templateUrl: './post.component.html',
     styleUrl: './post.component.css'
 })

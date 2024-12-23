@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { PostData } from '../../post/post.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-productedit',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, LoaderComponent],
     templateUrl: './productedit.component.html',
     styleUrl: './productedit.component.css'
 })
@@ -43,6 +44,18 @@ export class ProducteditComponent {
     };
 
     constructor(public appService: AppService, private router: Router) {
+
+        this.appService.inactiveLoader();
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+        });
+
+
+
+
+
 
         this.appService.manageInterval();
 
@@ -100,6 +113,22 @@ export class ProducteditComponent {
             }
         }
 
+
+
+
+        // get expire time product //
+
+        if (this.appService.intervalExpireProduct !== null) {
+
+            clearInterval(this.appService.intervalExpireProduct);
+
+            this.appService.intervalExpireProduct = null;
+        }
+
+        this.appService.intervalExpireProduct = setInterval(() => {
+            this.appService.getRemainingTimeProduct(this.productData[0].product.product_created_at);
+        }, 1000);
+        
 
     }
 
@@ -554,6 +583,181 @@ export class ProducteditComponent {
 
                 errorDiv.classList.remove('active_error');
             }, 2500);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    async handleClickRenewSeeButton(e: Event) {
+
+
+
+        e.preventDefault();
+
+        const mainElement = (document.getElementsByClassName('main')[0] as HTMLElement);
+        const errorDiv = (document.getElementsByClassName('error-div')[0] as HTMLDivElement);
+        const errorDivSpan = (document.getElementsByClassName('error-div-span')[0] as HTMLSpanElement);
+        const errorConfirmDiv = (document.getElementsByClassName('error-div-confirm-div')[0] as HTMLDivElement);
+
+        let buttonValue = (e.target as HTMLButtonElement).value;
+
+        let buttonIdProduct =(e.target as HTMLButtonElement).getAttribute('data-id-product');
+
+
+
+
+    
+
+
+
+
+        // if button clicked == RENEW //
+
+        if (buttonValue == 'renew') {
+
+
+
+
+            // // if user logged in //
+
+            if (this.appService.user.id > 0) {
+
+
+
+                if (buttonIdProduct == window.location.pathname.replace('/myaccount/product/edit/', '')) {
+
+
+
+                    errorDiv.classList.remove('active_error');
+
+                    const spanHidden = document.createElement('span');
+                    spanHidden.setAttribute('class', 'error-div-span-hidden');
+                    spanHidden.setAttribute('data-product-id-renew', buttonIdProduct as string);
+
+
+                    errorDiv.append(spanHidden);
+
+                    
+                    this.appService.timeoutRoute = setTimeout(() => {
+
+                        errorDivSpan.textContent = 'Êtes-vous sûr de vouloir renouveller l\'annonce pour 14 jours supplémentaires ?';
+                        errorConfirmDiv.classList.add('active_confirm');
+                        errorDiv.classList.add('active_confirm');
+                        mainElement.classList.add('blur');
+                    }, 750);
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            // -- //
+
+
+
+
+
+            else {
+
+                this.appService.timeoutRoute = setTimeout(() => {
+
+                    errorDivSpan.textContent = 'Veuillez vous connecter à votre compte afin de poursuivre';
+
+                    errorDiv.classList.add('active_error');
+
+                }, 750);
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+
+
+                this.appService.timeoutRoute = setTimeout(() => {
+
+                    errorDiv.classList.remove('active_error');
+                }, 2500);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // if button clicked == SEE-OFFER //
+
+        else if (buttonValue == 'see-offer') {
+
+            this.router.navigate([`/myoffer`], {
+                'queryParams': {
+                    'see': buttonIdProduct
+                }
+            });
+
+
+            let buttonReceived = (document.getElementsByClassName('section-my-offer-button-received')[0] as HTMLButtonElement);;
+
+
+            const promiseButtonReceived = new Promise(resolve => {
+
+                
+
+
+                if (buttonReceived == undefined) {
+
+                    setTimeout(() => {
+
+                        this.handleClickRenewSeeButton(e);
+                    }, 25);
+                }
+
+
+
+                else if (buttonReceived !== undefined) {
+
+                    resolve(buttonReceived);
+                }
+            });
+
+
+            const resultPromiseButtonReceived = await promiseButtonReceived;
+
+           
+            if (resultPromiseButtonReceived !== undefined) {
+
+
+
+
+                // set attribute to filter only offer product_id offers //
+
+                buttonReceived.setAttribute('specific_product_id', (buttonIdProduct as string));
+
+                buttonReceived.click();
+            }
         }
     }
 }

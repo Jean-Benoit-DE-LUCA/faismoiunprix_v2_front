@@ -1,3 +1,5 @@
+<app-loader></app-loader>
+
 <main class='main'>
 
     <button type='button' class='button-back' name='button-back' (click)='this.appService.handleClickBackButton($event)'>
@@ -39,7 +41,9 @@
             </select>
             <!-- make category part select HERE -->
 
-            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-title' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-title' (click)='handleClickButtonNextPost($event)'>Continuer
+                <img class='button-post-img-arrow-next' src='../../../assets/pictures/arrow-right-short.svg' />
+            </button>
             
         </div>
 
@@ -110,7 +114,9 @@
 
 
 
-            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-description' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-description' (click)='handleClickButtonNextPost($event)'>Continuer
+                <img class='button-post-img-arrow-next' src='../../../assets/pictures/arrow-right-short.svg' />
+            </button>
 
         </div>
 
@@ -182,7 +188,9 @@
             </section>
 
 
-            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-picture' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-picture' (click)='handleClickButtonNextPost($event)'>Continuer
+                <img class='button-post-img-arrow-next' src='../../../assets/pictures/arrow-right-short.svg' />
+            </button>
 
         </div>
 
@@ -206,11 +214,25 @@
                 <img src='/assets/pictures/currency-euro.svg' class='img-currency-euro' />
             </div>
 
-            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-offer' (click)='handleClickButtonNextPost($event)'>Continuer</button>
+            <button *ngIf='this.allActive == false' type='button' class='button-post-title' name='button-post-offer' (click)='handleClickButtonNextPost($event)'>Continuer
+                <img class='button-post-img-arrow-next' src='../../../assets/pictures/arrow-right-short.svg' />
+            </button>
+
+
+
+
 
             <!-- if all active -->
 
-            <button *ngIf='this.allActive == true' type='button' class='button-post-title' name='button-post-offer-post' (click)='handleClickButtonNextPost($event)'>Déposer</button>
+            <p *ngIf='this.allActive == true' class='p-post-product'>
+                Chaque nouveau produit déposé à une durée d'expiration de 14 jours.
+                <br />
+                Au delà, si aucune offre n'est satisfaite, vous aurez la possibilité de renouveller votre annonce ou de la supprimer.
+            </p>
+
+            <button *ngIf='this.allActive == true' type='button' class='button-post-title up' name='button-post-offer-post' (click)='handleClickButtonNextPost($event)'>Déposer
+                <img class='button-post-img-arrow-next up' src='../../../assets/pictures/arrow-right-short.svg' />
+            </button>
 
             <!-- -- -->
 
