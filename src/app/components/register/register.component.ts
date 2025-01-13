@@ -33,12 +33,6 @@ export class RegisterComponent {
         const password = (document.getElementsByClassName("register-password")[0] as HTMLInputElement);
         const passwordConfirmation = (document.getElementsByClassName("register-password-confirmation")[0] as HTMLInputElement);
 
-        console.log(name.value);
-        console.log(firstname.value);
-        console.log(email.value);
-        console.log(phone.value);
-        console.log(password.value);
-        console.log(passwordConfirmation.value);
 
         if ((name.value !== '' &&
             firstname.value !== '' &&
@@ -76,7 +70,6 @@ export class RegisterComponent {
 
             const responseData = await response.json();
 
-            console.log(responseData);
 
             if (responseData.hasOwnProperty('user')) {
 

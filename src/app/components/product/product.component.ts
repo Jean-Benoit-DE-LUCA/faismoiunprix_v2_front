@@ -176,8 +176,6 @@ export class ProductComponent {
 
 
         const responseUserIdPromise = await userIdPromise;
-
-        console.log(responseUserIdPromise)
     }
 
 
@@ -193,8 +191,6 @@ export class ProductComponent {
         const responseData = await response.json();
 
         this.productData = Object.assign({}, responseData.result);
-
-        console.log(this.productData);
 
 
 
@@ -218,9 +214,6 @@ export class ProductComponent {
 
             return 0;
         });
-
-
-        console.log(this.productData[0]);
 
         this.checkAcceptedOffer(this.productData[0]['offer']);
 
@@ -260,9 +253,6 @@ export class ProductComponent {
                 break;
             }
         }
-
-
-        console.log(this.offerAccepted);
     }
 
 
@@ -524,9 +514,6 @@ export class ProductComponent {
 
 
 
-        console.log(this.productData);
-        console.log(this.appService.user);
-
         if (inputOffer.value.trim().length == 0) {
 
 
@@ -585,9 +572,6 @@ export class ProductComponent {
 
 
         else if (inputOffer.value.trim() !== '') {
-
-            console.log(this.productData[0].offer[this.productData[0].offer.length - 1].offer_offerprice);
-
 
 
             if (this.productData[0].offer[this.productData[0].offer.length - 1].offer_offerprice !== null) {

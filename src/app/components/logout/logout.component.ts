@@ -27,8 +27,6 @@ export class LogoutComponent {
 
         const responseData = await response.json();
 
-        console.log(responseData);
-
 
 
 
@@ -42,8 +40,6 @@ export class LogoutComponent {
 
 
         const responseJwtData = await responseJwt.json();
-
-        console.log(responseJwtData);
 
 
 

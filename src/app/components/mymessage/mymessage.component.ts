@@ -93,8 +93,6 @@ export class MymessageComponent {
 
                         
 
-                        console.log((this.productMessageObj as any)[selectProduct.value][selectedConversationCode][idMessage]);
-
                         if (!flag) {
 
                             this.appService.createMessage((this.productMessageObj as any)[selectProduct.value][selectedConversationCode][idMessage].user_send_firstname, (this.productMessageObj as any)[selectProduct.value][selectedConversationCode][idMessage].message_contact_message, (this.productMessageObj as any)[selectProduct.value][selectedConversationCode][idMessage].message_contact_created_at, (this.productMessageObj as any)[selectProduct.value][selectedConversationCode][idMessage].message_contact_id);
@@ -237,8 +235,6 @@ export class MymessageComponent {
 
 
 
-                        // TODO => VERIFY CONDITION appService.user.id .. //
-
                         if ((this.productMessageObj as any)[product][conversation][message]['message_contact_user_receive_id_read'] == 'false' &&
                             (this.productMessageObj as any)[product][conversation][message]['message_contact_user_receive_id'] == this.appService.user.id) {
 
@@ -248,9 +244,6 @@ export class MymessageComponent {
                     }
                 }
             }
-
-
-            console.log(this.productMessageObj);
         }
     }
 
@@ -585,8 +578,6 @@ export class MymessageComponent {
 
             const responseData = await response.json();
 
-            console.log(responseData);
-
 
             if (responseData.flag) {
 
@@ -635,11 +626,6 @@ export class MymessageComponent {
 
         const conversation_code = selectUser.options[selectUser.selectedIndex].getAttribute('data-conversation-code');
         const user_id = (selectUser.options[selectUser.selectedIndex].value);
-
-        console.log(conversation_code);
-        console.log(user_id);
-
-        console.log(this.appService.user.id);
 
 
 
@@ -765,13 +751,6 @@ export class MymessageComponent {
             const product_id = (this.productMessageObj as any)[selectProduct.value][conversation_code as string][Object.keys((this.productMessageObj as any)[selectProduct.value][conversation_code as string])[0]].product_id;
 
 
-            console.log(product_user_id);
-            console.log(this.appService.user.id);
-            console.log(selectUser.options[selectUser.selectedIndex].value);
-            console.log(inputMessage.value.trim());
-
-            console.log(product_id);
-
 
 
 
@@ -794,8 +773,6 @@ export class MymessageComponent {
             });
 
             const responseData = await response.json();
-
-            console.log(responseData);
 
 
 

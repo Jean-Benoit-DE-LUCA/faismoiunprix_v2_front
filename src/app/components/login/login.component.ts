@@ -272,8 +272,6 @@ export class LoginComponent {
 			
 			for (let i = 0; i < array_message_contact.length; i++) {
 
-				console.log(array_message_contact[i]);
-
 				if ((array_message_contact[i].message_contact_user_receive_id == this.appService.user.id) &&
 					(array_message_contact[i].message_contact_user_receive_id_read == 'false')) {
 

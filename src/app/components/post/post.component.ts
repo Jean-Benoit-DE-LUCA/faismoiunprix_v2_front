@@ -56,10 +56,89 @@ export class PostComponent {
     allActive: boolean = false;
 
 
+
+
     constructor(public appService: AppService, private router: Router) {
 
         this.appService.manageInterval();
+
+        this.waitTitleElement();
+        
     }
+
+    waitTitleElement() {
+
+        const inputTitle = (document.getElementsByClassName('section-post-title-input')[0] as HTMLInputElement);
+
+        if (inputTitle !== undefined) {
+
+            this.checkInputTitlePostDivClassContainsOnNotAllActiveNewPostObjectTitleLengthMoreThanZero(inputTitle.parentElement as HTMLDivElement);
+
+            return;
+        }
+
+        setTimeout(() => {
+
+            this.waitTitleElement();
+        }, 50);
+    };
+
+
+
+
+
+
+
+
+
+
+    checkInputTitlePostDivClassContainsOnNotAllActiveNewPostObjectTitleLengthMoreThanZero(divElement: HTMLDivElement) {
+
+        if (divElement.classList.contains('on') && 
+            !divElement.classList.contains('all-active') &&
+            this.appService.newPostObject.title.length > 0) {
+
+            this.appService.inputTitlePostDivClass_ContainsOn_NotAllActive_NewPostObjectTitleLengthMoreThanZero = true;
+
+            
+
+
+
+
+            this.checkRememberSection()
+            
+        }
+    }
+
+
+
+
+
+
+    checkRememberSection() {
+
+        const sectionRememberPost = (document.getElementsByClassName('section-remember-post')[0] as HTMLElement);
+
+        
+
+        if (sectionRememberPost !== undefined) {
+
+            this.disableEnableButtonTitle('disable');
+
+            return;
+        }
+
+        else {
+
+            setTimeout(() => {
+
+                this.checkRememberSection();
+            }, 125);
+        }
+    }
+
+
+
 
     async handleClickButtonNextPost(e: MouseEvent) {
 
@@ -93,6 +172,9 @@ export class PostComponent {
 
                 this.objectPost.title = inputTitle.value;
                 this.objectPost.category_id = Number(selectCategory.value);
+
+                this.appService.newPostObject.title = inputTitle.value;
+                this.appService.newPostObject.category_id = Number(selectCategory.value);
 
                 this.functionAnimSection(divSectionTitle, divSectionDescription);
 
@@ -141,6 +223,12 @@ export class PostComponent {
                 this.objectPost.email = emailInputDescription.value.trim();
 
                 
+                this.appService.newPostObject.description = textareaDescription.value;
+                this.appService.newPostObject.city = cityInputDescription.value.trim();
+                this.appService.newPostObject.zip = zipInputDescription.value.trim();
+                this.appService.newPostObject.phone = phoneInputDescription.value.trim();
+                this.appService.newPostObject.email = emailInputDescription.value.trim();
+                
                 for (let i = 0; i < inputRadio.length; i++) {
 
                     if (inputRadio[i].checked) {
@@ -148,11 +236,15 @@ export class PostComponent {
                         if (inputRadio[i].id.includes('delivery-yes')) {
     
                             this.objectPost.delivery = true;
+
+                            this.appService.newPostObject.delivery = true;
                         }
     
                         else if (inputRadio[i].id.includes('delivery-no')) {
     
                             this.objectPost.delivery = false;
+
+                            this.appService.newPostObject.delivery = false;
                         }
                     }
                 }
@@ -192,8 +284,6 @@ export class PostComponent {
                 emailInputDescription.focus();
             }
 
-            // TODO -> UPDATE PRODUCT EDIT WITH EMAIL //
-
         }
 
 
@@ -221,6 +311,7 @@ export class PostComponent {
 
             this.objectPost.offer = (inputOffer.value.trim());
             
+            this.appService.newPostObject.offer = inputOffer.value.trim();
 
             this.functionAnimSection(divSectionOffer, divSectionTitle);
             this.functionAnimSection(divSectionOffer, divSectionDescription);
@@ -244,8 +335,6 @@ export class PostComponent {
 
 
             this.appService.newPostObject = Object.assign({}, this.objectPost);
-
-            console.log(this.appService.newPostObject);
 
 
 
@@ -300,8 +389,6 @@ export class PostComponent {
                 }, 2500);
             }
 
-            console.log(this.appService.newPostObject);
-
         }
     }
 
@@ -340,9 +427,6 @@ export class PostComponent {
         // remove input file from array //
 
         for (const key of Object.keys(this.objectPost.picture)) {
-
-
-            console.log(this.objectNameFile);
 
             if ((this.objectPost.picture as any)[key].name == inputElement.value.replace('C:\\fakepath\\', '') ||
                 (this.objectPost.picture as any)[key].name == this.objectNameFile[currentNameFile]) {
@@ -451,8 +535,6 @@ export class PostComponent {
         /*---*/
 
         this.objectNameFile[currentNameFile] = (((e.currentTarget as HTMLInputElement).files as FileList)[0].name);
-        
-        console.log(this.objectNameFile);
 
     }
 
@@ -588,5 +670,148 @@ export class PostComponent {
             secondSection.classList.remove('off');
             secondSection.classList.add('on');
         }, 300);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    handleSubmitRememberPost(e: Event) {
+
+        e.preventDefault();
+
+
+
+        if ((document.activeElement as HTMLButtonElement).value == 'no') {
+
+            this.appService.newPostObject = Object.assign({}, {
+                title: '',
+                category_id: 0,
+                description: '',
+                city: '',
+                zip: '',
+                phone: '',
+                email: '',
+                delivery: false,
+                offer: ''
+            });
+
+
+            this.appService.inputTitlePostDivClass_ContainsOn_NotAllActive_NewPostObjectTitleLengthMoreThanZero = false;
+
+            this.disableEnableButtonTitle('enable');
+        }
+
+
+
+
+
+
+
+        else if ((document.activeElement as HTMLButtonElement).value == 'yes') {
+
+            const sectionRememberPost = (document.getElementsByClassName('section-remember-post')[0] as HTMLElement);
+
+            sectionRememberPost.style.display = 'none'
+
+            this.disableEnableButtonTitle('enable');
+
+            const inputTitle = (document.getElementsByClassName('section-post-title-input')[0] as HTMLInputElement);
+            const selectCategory = (document.getElementsByClassName('section-post-title-select-category')[0] as any);
+            const textareaDescription = (document.getElementsByClassName('section-post-description-textarea')[0] as HTMLTextAreaElement);
+
+            const cityInputDescription = (document.getElementsByClassName('section-post-description-city-input')[0] as HTMLInputElement);
+            const zipInputDescription = (document.getElementsByClassName('section-post-description-zip-input')[0] as HTMLInputElement);
+            const phoneInputDescription = (document.getElementsByClassName('section-post-description-phone-input')[0] as HTMLInputElement);
+            const emailInputDescription = (document.getElementsByClassName('section-post-description-email-input')[0] as HTMLInputElement);
+
+            const inputRadio = (document.getElementsByClassName('section-post-description-delivery') as HTMLCollectionOf<HTMLInputElement>);
+
+            const inputOffer = (document.getElementsByClassName('section-post-offer-input')[0] as HTMLInputElement);
+
+
+
+
+
+
+            inputTitle.value = this.appService.newPostObject.title;
+            
+            for (let i = 0; i < selectCategory.length; i++) {
+
+                if (Number(selectCategory.options[i].value) == Number(this.appService.newPostObject.category_id)) {
+
+                    selectCategory.options[i].selected = true;
+                    break;
+                }
+            }
+
+            textareaDescription.value = this.appService.newPostObject.description;
+            cityInputDescription.value = this.appService.newPostObject.city;
+            zipInputDescription.value = this.appService.newPostObject.zip;
+            phoneInputDescription.value = this.appService.newPostObject.phone;
+            emailInputDescription.value = this.appService.newPostObject.email;
+            inputOffer.value = this.appService.newPostObject.offer;
+            
+
+            for (let i = 0; i < inputRadio.length; i++) {
+
+                if (this.appService.newPostObject.delivery == true) {
+
+                    if (inputRadio[i].id.includes('delivery-yes')) {
+
+                        inputRadio[i].checked = true;
+                        break;
+                    }
+                }
+
+
+                else if (this.appService.newPostObject.delivery == false) {
+
+                    if (inputRadio[i].id.includes('delivery-no')) {
+
+                        inputRadio[i].checked = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    disableEnableButtonTitle(status: string) {
+
+        const buttonNextPost = (document.getElementsByClassName('button-post-title') as HTMLCollectionOf<HTMLButtonElement>);
+
+        for (let i = 0; i < buttonNextPost.length; i++) {
+            
+            if (buttonNextPost[i].name == 'button-post-title') {
+
+                if (status == 'enable') {
+
+                    buttonNextPost[i].style.pointerEvents = 'auto';
+                }
+
+                else if (status == 'disable') {
+
+                    buttonNextPost[i].style.pointerEvents = 'none';
+                }
+            }
+        }
+
     }
 }

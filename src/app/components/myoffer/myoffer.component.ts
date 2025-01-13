@@ -237,8 +237,6 @@ export class MyofferComponent {
 
         this.offerResult = array_result.slice();
 
-        console.log(specific_product_id);
-
 
 
 
@@ -297,11 +295,6 @@ export class MyofferComponent {
 
 
 
-
-        console.log(this.appService.offerSpecific[0]);
-
-
-
         // update user_receive_id_read on click //
 
         const responseUpdateReceiveRead = await fetch(`${this.appService.hostname}/api/updatemessagereceiveread`, {
@@ -318,7 +311,6 @@ export class MyofferComponent {
 
         const responseUpdateReceiveReadData = await responseUpdateReceiveRead.json();
 
-        console.log(responseUpdateReceiveReadData);
 
         if (responseUpdateReceiveReadData.flag) {
 
@@ -335,8 +327,6 @@ export class MyofferComponent {
 
                         rowOffersImageEnvelope.classList.remove('active');
                     }
-
-                    // TODO => CONTACT => NOT HERE //
                 }
             }
 
@@ -383,8 +373,6 @@ export class MyofferComponent {
 
         const currentMessageDiv = (divMessaging.getElementsByClassName('specific-offer-div-messaging-div-wrap') as HTMLCollectionOf<HTMLDivElement>);
 
-        console.log(currentMessageDiv.length);
-
         const spanMessageId = (document.getElementsByClassName('specific-offer-div-messaging-span-message-id-hidden') as HTMLCollectionOf<HTMLSpanElement>);
 
 
@@ -430,8 +418,6 @@ export class MyofferComponent {
 
                 arrayCurrentMessageId.sort((a, b) => a - b);
 
-                console.log(arrayCurrentMessageId);
-
 
 
 
@@ -444,8 +430,6 @@ export class MyofferComponent {
                 }
 
                 arrayActualMessageId.sort((a, b) => a - b);
-
-                console.log(arrayActualMessageId);
 
 
 
@@ -612,17 +596,6 @@ export class MyofferComponent {
 
         else {
 
-            console.log(this.appService.user.id);
-            console.log(this.appService.offerSpecific[0]['offer_user_offer']);
-            console.log(this.appService.offerSpecific[0]['product_id']);
-            console.log(inputMessage.value);
-
-            console.log(this.appService.user);
-
-
-
-
-
             const response = await fetch(`${this.appService.hostname}/api/insertmessage`, {
                 method: 'POST',
                 headers: {
@@ -641,13 +614,6 @@ export class MyofferComponent {
 
 
             const responseData = await response.json();
-
-            console.log(responseData);
-
-
-
-
-
 
 
 
@@ -723,8 +689,6 @@ export class MyofferComponent {
         });
 
         const responseData = await response.json();
-
-        console.log(responseData.result);
 
 
 
@@ -855,8 +819,6 @@ export class MyofferComponent {
 
 
     handleClickAcceptDenyOffer(e: MouseEvent, status: string) {
-
-        console.log(this.appService.offerSpecific[0]['user_offer_firstname']);
 
         const mainElement = (document.getElementsByClassName('main')[0] as HTMLElement);
 

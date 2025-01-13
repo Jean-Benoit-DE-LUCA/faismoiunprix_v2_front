@@ -675,7 +675,7 @@ select:disabled {
     background-position: 0% 0%, 0% 100%, 0% 0%, 100% 0%;
     background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
 
-    animation: animBorderDotted 60s infinite linear, animAppearDiv 6s ease-in-out forwards;
+    animation: animBorderDotted 60s infinite linear, animAppearDiv 3s ease-in-out forwards;
 
     cursor: pointer;
 
@@ -962,7 +962,7 @@ select:disabled {
 .header-title-anchor-div-span-cross.anim {
     opacity: 0;
     visibility: hidden;
-    animation: animCrossVisibility 2s 5.5s forwards;
+    animation: animCrossVisibility 2s 2.5s forwards;
 }
 
 
@@ -1020,7 +1020,7 @@ select:disabled {
 
 
 
-/* TODO => REVISE CROSS HOVER */
+
 
 .header-title-anchor-div-span-cross:hover {
     /* transform: rotate(0deg) scale(.8);
@@ -1068,7 +1068,7 @@ select:disabled {
 .header-title-anchor-div-img-arrow.active {
     z-index: 1;
     transition: transform .2s;
-    animation: animArrowAppear 2s 1s forwards;
+    animation: animArrowAppear 2s .3s forwards;
 }
 
 @keyframes animArrowAppear {
@@ -1158,7 +1158,7 @@ select:disabled {
     z-index: 1;
 }
 
-/* TODO => REVISE ANIM */
+
 
 /* .header-title-anchor-div-img-arrow-bottom-div-back {
     height: 100%;
@@ -3615,6 +3615,61 @@ form input {
     transform: translateX(-20%);
 }
 
+
+
+
+/*--- remember ---*/
+
+.section-remember-post {
+    height: 9rem;
+    width: 17rem;
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: #a0b6c1;
+    z-index: 1;
+}
+
+.section-remember-post-form {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+.section-remember-post-form-span {
+    font-family: var(--fontFamily);
+    font-size: var(--fontSize1-2);
+    padding: .5rem;
+}
+
+
+
+
+
+.section-remember-post-form-div-button {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 0.5rem;
+}
+
+.section-remember-post-form-button {
+    font-size: var(--fontSize1-1);
+    border-radius: var(--borderRadiusInput);
+    font-family: var(--fontFamily);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
 .section-post-title-div, .section-post-description-div, .section-post-picture-div, .section-post-offer-div {
     display: flex;
     flex-flow: column nowrap;
@@ -4339,7 +4394,7 @@ form input {
         background-position: 0% 0%, 0% 100%, 0% 0%, 100% 0%;
         background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
 
-        animation: animBorderDotted 60s infinite linear, animAppearDiv 6s ease-in-out forwards;
+        animation: animBorderDotted 60s infinite linear, animAppearDiv 3s ease-in-out forwards;
 
         cursor: pointer;
         /* pointer-events: none; */
@@ -4712,6 +4767,14 @@ form input {
         box-sizing: border-box;
 
     }
+
+
+
+    .section-remember-post {
+        width: 25rem;
+    }
+
+
 
     .section-search-result-element-div-product-owner {
         margin: 1rem auto;

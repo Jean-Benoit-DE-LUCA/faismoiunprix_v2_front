@@ -98,7 +98,7 @@ export class ProducteditComponent {
 
         this.productData = Object.assign({}, responseData.result);
 
-        console.log(this.productData);
+        
 
 
 
@@ -196,8 +196,6 @@ export class ProducteditComponent {
         /*---*/
 
         this.objectNameFile[currentNameFile] = (((e.currentTarget as HTMLInputElement).files as FileList)[0].name);
-        
-        console.log(this.objectNameFile);
 
     }
 
@@ -267,10 +265,6 @@ export class ProducteditComponent {
 
         imgAnchor.href = '';
         imgAnchor.classList.remove('active');
-
-
-        console.log(this.objectNameFile);
-        console.log(this.objectPost);
     }
 
 
@@ -450,7 +444,9 @@ export class ProducteditComponent {
 
             this.objectPost['user_id'] = this.appService.user.id;
 
-            this.appService.newPostObject = Object.assign({}, this.objectPost);
+            //this.appService.newPostObject = Object.assign({}, this.objectPost);
+
+            this.appService.newPostObjectUpdate = Object.assign({}, this.objectPost);
             this.appService.objectNameFileUpdate = Object.assign({}, this.objectNameFile);
 
 
@@ -500,9 +496,6 @@ export class ProducteditComponent {
                 errorDiv.classList.remove('active_error');
             }, 2500);
         }
-
-
-        console.log(this.objectPost);
     }
 
 
@@ -544,7 +537,7 @@ export class ProducteditComponent {
 
             this.appService.timeoutRoute = setTimeout(() => {
 
-                errorDivSpan.textContent = 'On confirme la suppression ? Attention, cela supprimera tous les offres et messages liés à ce produit';
+                errorDivSpan.textContent = 'On confirme la suppression ? Attention, cela supprimera toutes les offres et messages liés à ce produit';
                 errorConfirmDiv.classList.add('active_confirm');
                 errorDiv.classList.add('active_confirm');
                 mainElement.classList.add('blur');

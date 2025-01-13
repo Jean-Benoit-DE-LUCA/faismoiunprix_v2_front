@@ -6,6 +6,32 @@
         <img class='button-back-img' src='../../../assets/pictures/arrow-left-short.svg' />
     </button>
 
+
+
+    <!-- ASK DIV LOAD PREVIOUS POST -->
+
+    <section *ngIf='this.appService.newPostObject.hasOwnProperty("title") 
+                 && this.appService.newPostObject.title.length > 0
+                 && this.appService.inputTitlePostDivClass_ContainsOn_NotAllActive_NewPostObjectTitleLengthMoreThanZero' class='section-remember-post'>
+
+        <form class='section-remember-post-form' id='section-remember-post-form' action='' method='post' (submit)='handleSubmitRememberPost($event)'>
+
+            <span class='section-remember-post-form-span'>Voulez-vous reprendre votre précédent dépôt: {{ this.appService.newPostObject.title }}</span>
+
+            <div class='section-remember-post-form-div-button'>
+                <button type='submit' class='section-remember-post-form-button yes' name='yes' value='yes'>Oui</button>
+                <button type='submit' class='section-remember-post-form-button no' name='no' value='no'>Non</button>
+            </div>
+        
+        </form>
+
+    </section>
+
+    <!-- ASK DIV LOAD PREVIOUS POST -->
+
+
+    
+
     <section class='section-post'>
 
         <h2 *ngIf='this.allActive == false'class='section-register-title'>Déposer un produit</h2>
@@ -82,9 +108,9 @@
 
             <span class='section-post-title-span'>Où me joindre?</span>
 
-            <input type='number' class='section-post-description-phone-input' id='section-post-description-phone-input' name='section-post-description-phone-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.phone }}'/>
+            <input type='number' class='section-post-description-phone-input' id='section-post-description-phone-input' name='section-post-description-phone-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.phone }}' placeholder='Téléphone'/>
 
-            <input type='email' class='section-post-description-email-input' id='section-post-description-email-input' name='section-post-description-email-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.email }}'/>
+            <input type='email' class='section-post-description-email-input' id='section-post-description-email-input' name='section-post-description-email-input' [readonly]='this.allActive ? true : false' (keyup)='this.appService.handleKeyUpInputLength($event)' value='{{ this.appService.user.email }}' placeholder='Email'/>
 
 
 

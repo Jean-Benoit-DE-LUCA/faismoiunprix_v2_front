@@ -107,8 +107,6 @@ export class ErrorComponent {
 
                         const responseData = await response.json();
 
-                        console.log(responseData);
-
 
 
 
@@ -269,7 +267,6 @@ export class ErrorComponent {
 
                         const responseData = await response.json();
 
-                        console.log(responseData);
 
 
 
@@ -404,137 +401,12 @@ export class ErrorComponent {
 
 
 
-                console.log(this.appService.newPostObject);
 
 
 
+                //if (this.appService.newPostObjectUpdate.title.length == 0) {
 
-
-
-
-
-                const formData = new FormData();
-
-
-                for (const key of Object.keys(this.appService.newPostObject)) {
-
-                    if (key !== 'picture') {
-
-                        formData.append(key, (this.appService.newPostObject as any)[key].toString());
-                    }
-
-
-
-
-
-                    else if (key == 'picture') { // if key == 'picture' => pictures object uploaded //
-
-
-
-
-                        if (Object.keys((this.appService.newPostObject as any)[key]).length > 0) { // if pictures object is not empty => pictures added by user //
-
-                            for (const pictureKey of Object.keys((this.appService.newPostObject as any)[key])) {
-
-                                //formData.append(picture.name, picture);
-                                formData.append(`pic_${pictureKey}`, (this.appService.newPostObject as any)[key][pictureKey]);
-                            }
-                        }
-                    }
-
-                }
-
-                for (const key of (formData as any).keys()) {
-
-                    console.log(key);
-                    console.log(formData.get(key));
-                }
-
-
-
-
-
-
-                // check if city in database //
-
-                const responseCheckCityDatabase = await fetch(`${this.appService.hostname}/api/checkcity`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        city: formData.get('city'),
-                        zip: formData.get('zip')
-                    })
-                });
-
-                const responseDataCheckCityDatabase = await responseCheckCityDatabase.json();
-
-
-
-
-                // if city found in database //
-
-                if (responseDataCheckCityDatabase.checkCity.length > 0) {
-
-                    console.log(responseDataCheckCityDatabase.checkCity[0]['latitude']);
-                    console.log(responseDataCheckCityDatabase.checkCity[0]['longitude']);
-                    console.log('FOUND!');
-
-                    formData.append('latitude', responseDataCheckCityDatabase.checkCity[0]['latitude']);
-                    formData.append('longitude', responseDataCheckCityDatabase.checkCity[0]['longitude']);
-                }
-
-
-
-                // if city NOT found in database //
-
-                else if (responseDataCheckCityDatabase.checkCity.length == 0) {
-
-                    console.log('NOT FOUND!');
-
-                    // get coordinates from city //
-
-                    const responseCityCoordinatesBack = await fetch(`${this.appService.hostname}/api/getcoordinates/city/${formData.get('city')}/zip/${formData.get('zip')}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-type': 'application/json'
-                        }
-                    });
-
-                    const responseDataCityCoordinatesBack = await responseCityCoordinatesBack.json();
-
-                    formData.append('latitude', responseDataCityCoordinatesBack.latitude);
-                    formData.append('longitude', responseDataCityCoordinatesBack.longitude);
-
-
-
-
-
-
-                    const responseCityInsert = await fetch(`${this.appService.hostname}/api/insertcity`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            city: formData.get('city'),
-                            zip: formData.get('zip'),
-                            latitude: formData.get('latitude'),
-                            longitude: formData.get('longitude')
-                        })
-                    });
-
-                    const responseDataCityInsert = await responseCityInsert.json();
-
-                    console.log(responseDataCityInsert);
-                }
-
-
-
-
-
-
+            
 
 
 
@@ -544,7 +416,9 @@ export class ErrorComponent {
                 if (window.location.pathname.startsWith('/post')) {
 
 
-                    formData.append('Authorization', this.appService.user.jwt);
+                    const formData = await this.fillFormData(this.appService.newPostObject);
+
+                    
 
                     const response = await fetch(`${this.appService.hostname}/api/insertproduct`, {
                         method: 'POST',
@@ -570,7 +444,9 @@ export class ErrorComponent {
                             errorDiv.classList.remove('active_success');
                             
     
-    
+                            // ADD UPDATE PRODUCT EDIT//
+                            this.appService.newPostObject = Object.assign({}, this.appService.newPostObject);
+                            // ADD UPDATE PRODUCT EDIT//
     
     
                             window.scrollTo({
@@ -660,121 +536,103 @@ export class ErrorComponent {
 
 
 
-                    for (const nameFile of Object.keys(this.appService.objectNameFileUpdate)) {
-
-                        formData.append(nameFile, (this.appService.objectNameFileUpdate as any)[nameFile]);
-                    }
+                        const formData = await this.fillFormData(this.appService.newPostObjectUpdate);
 
 
 
 
-                    formData.append('Authorization', this.appService.user.jwt);
+                        for (const nameFile of Object.keys(this.appService.objectNameFileUpdate)) {
 
-
-
-                    const response = await fetch(`${this.appService.hostname}/api/updateproduct/${window.location.pathname.replace('/myaccount/product/edit/', '')}`, {
-                        method: 'POST',
-                        body: formData
-                    })
-
-                    const responseData = await response.json();
-
-                    console.log(responseData);
-
-
-
-
-
-                    if (responseData.hasOwnProperty('flag')) {
-
-                        if (responseData.flag) {
-
-
-                            errorConfirmDiv.classList.remove('active_confirm');
-                            errorDiv.classList.remove('active_confirm');
-                            errorDiv.classList.remove('active_error');
-                            errorDiv.classList.remove('active_success');
-                            
-
-
-
-
-                            window.scrollTo({
-                                top: 0,
-                                behavior: 'smooth'
-                            });
-
-
-
-                            this.appService.timeoutRoute = setTimeout(() => {
-
-                                // deactivate loader //
-                                this.appService.inactiveLoader();
-                                //
-
-
-
-                                errorDivSpan.textContent = 'Produit modifié avec succès';
-
-                                errorDiv.classList.add('active_success');
-
-
-
-
-                                setTimeout(() => {
-
-                                    errorDiv.classList.remove('active_success');
-                                }, 1500);
-
-
-                            }, 3500);
-
-
-
-
-                            
-
-
-
-                            
-
-
-
-                            // this.appService.timeoutRoute = setTimeout(() => {
-
-                            //     errorDiv.classList.remove('active_success');
-                            // }, 3500);
+                            formData.append(nameFile, (this.appService.objectNameFileUpdate as any)[nameFile]);
                         }
 
 
 
 
-                        else if (!responseData.flag) {
+                        const response = await fetch(`${this.appService.hostname}/api/updateproduct/${window.location.pathname.replace('/myaccount/product/edit/', '')}`, {
+                            method: 'POST',
+                            body: formData
+                        })
 
-                            if (responseData.message.startsWith('Expired token')) {
+                        const responseData = await response.json();
 
-                                this.appService.timeoutRoute = setTimeout(() => {
-            
-                                errorDivSpan.textContent = 'Veuillez vous reconnecter à votre compte';
-            
-                                errorDiv.classList.add('active_error');
-            
-                                }, 750);
-                    
+
+
+
+
+                        if (responseData.hasOwnProperty('flag')) {
+
+                            if (responseData.flag) {
+
+
+                                errorConfirmDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_confirm');
+                                errorDiv.classList.remove('active_error');
+                                errorDiv.classList.remove('active_success');
+                                
+
+                                // ADD UPDATE PRODUCT EDIT//
+                                this.appService.newPostObjectUpdate = Object.assign({}, this.appService.newPostObjectUpdate);
+                                // ADD UPDATE PRODUCT EDIT//
+
+
                                 window.scrollTo({
                                     top: 0,
                                     behavior: 'smooth'
                                 });
+
+
+
+                                this.appService.timeoutRoute = setTimeout(() => {
+
+                                    // deactivate loader //
+                                    this.appService.inactiveLoader();
+                                    //
+
+
+
+                                    errorDivSpan.textContent = 'Produit modifié avec succès';
+
+                                    errorDiv.classList.add('active_success');
+
+
+
+
+                                    setTimeout(() => {
+
+                                        errorDiv.classList.remove('active_success');
+                                    }, 1500);
+
+
+                                }, 3500);
+
+
+
+
+                                
+
+
+
+                                
+
+
+
+                                // this.appService.timeoutRoute = setTimeout(() => {
+
+                                //     errorDiv.classList.remove('active_success');
+                                // }, 3500);
                             }
 
 
 
 
-                            else if (responseData.message.startsWith('User already registered')) {
+                            else if (!responseData.flag) {
 
-                                this.appService.timeoutRoute = setTimeout(() => {
-            
-                                    errorDivSpan.textContent = 'Veuillez utiliser un autre email';
+                                if (responseData.message.startsWith('Expired token')) {
+
+                                    this.appService.timeoutRoute = setTimeout(() => {
+                
+                                    errorDivSpan.textContent = 'Veuillez vous reconnecter à votre compte';
                 
                                     errorDiv.classList.add('active_error');
                 
@@ -784,9 +642,29 @@ export class ErrorComponent {
                                         top: 0,
                                         behavior: 'smooth'
                                     });
+                                }
+
+
+
+
+                                else if (responseData.message.startsWith('User already registered')) {
+
+                                    this.appService.timeoutRoute = setTimeout(() => {
+                
+                                        errorDivSpan.textContent = 'Veuillez utiliser un autre email';
+                    
+                                        errorDiv.classList.add('active_error');
+                    
+                                        }, 750);
+                            
+                                        window.scrollTo({
+                                            top: 0,
+                                            behavior: 'smooth'
+                                        });
+                                }
                             }
                         }
-                    }
+
                 }
             }
         }
@@ -847,10 +725,6 @@ export class ErrorComponent {
 
 
                 const formData = new FormData();
-
-
-
-                console.log(this.appService.user);
 
 
 
@@ -1270,8 +1144,6 @@ export class ErrorComponent {
 
                 const responseData = await response.json();
 
-                console.log(responseData);
-
 
 
                 if (!responseData.flag) {
@@ -1490,8 +1362,6 @@ export class ErrorComponent {
 
                         const responseData = await response.json();
 
-                        console.log(responseData);
-
 
 
 
@@ -1611,5 +1481,120 @@ export class ErrorComponent {
                 }
             }
         }
+    }
+
+
+
+
+
+
+    async fillFormData(product_object: object) {
+
+        const formData = new FormData();
+
+
+        for (const key of Object.keys(product_object)) {
+
+            if (key !== 'picture') {
+
+                formData.append(key, (product_object as any)[key].toString());
+            }
+
+
+
+
+
+            else if (key == 'picture') { // if key == 'picture' => pictures object uploaded //
+
+
+
+
+                if (Object.keys((product_object as any)[key]).length > 0) { // if pictures object is not empty => pictures added by user //
+
+                    for (const pictureKey of Object.keys((product_object as any)[key])) {
+
+                        //formData.append(picture.name, picture);
+                        formData.append(`pic_${pictureKey}`, (product_object as any)[key][pictureKey]);
+                    }
+                }
+            }
+
+        }
+
+
+
+
+
+
+        // check if city in database //
+
+        const responseCheckCityDatabase = await fetch(`${this.appService.hostname}/api/checkcity`, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                city: formData.get('city'),
+                zip: formData.get('zip')
+            })
+        });
+
+        const responseDataCheckCityDatabase = await responseCheckCityDatabase.json();
+
+
+
+
+        // if city found in database //
+
+        if (responseDataCheckCityDatabase.checkCity.length > 0) {
+
+            formData.append('latitude', responseDataCheckCityDatabase.checkCity[0]['latitude']);
+            formData.append('longitude', responseDataCheckCityDatabase.checkCity[0]['longitude']);
+        }
+
+
+
+        // if city NOT found in database //
+
+        else if (responseDataCheckCityDatabase.checkCity.length == 0) {
+
+            // get coordinates from city //
+
+            const responseCityCoordinatesBack = await fetch(`${this.appService.hostname}/api/getcoordinates/city/${formData.get('city')}/zip/${formData.get('zip')}`, {
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            });
+
+            const responseDataCityCoordinatesBack = await responseCityCoordinatesBack.json();
+
+            formData.append('latitude', responseDataCityCoordinatesBack.latitude);
+            formData.append('longitude', responseDataCityCoordinatesBack.longitude);
+
+
+
+
+
+
+            const responseCityInsert = await fetch(`${this.appService.hostname}/api/insertcity`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    city: formData.get('city'),
+                    zip: formData.get('zip'),
+                    latitude: formData.get('latitude'),
+                    longitude: formData.get('longitude')
+                })
+            });
+
+            const responseDataCityInsert = await responseCityInsert.json();
+        }
+
+        formData.append('Authorization', this.appService.user.jwt);
+
+        return formData;
     }
 }

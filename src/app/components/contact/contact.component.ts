@@ -95,8 +95,6 @@ export class ContactComponent {
 
             const responseData = await response.json();
 
-            console.log(responseData);
-
 
 
             if (responseData.flag) {

@@ -85,30 +85,13 @@ export class HomeComponent {
 
         if (responsePromiseSpanAvailable.length > 0) {
 
-
-
-            // const spanWrap = (document.getElementsByClassName('section-home-div-presentation-p-span-wrap') as HTMLCollectionOf<HTMLSpanElement>);
-
-            // console.log(spanWrap);
-
             let transitionDelay = 0;
 
             for (let i = 0; i < responsePromiseSpanAvailable.length; i++) {
 
                 const spanWidth = responsePromiseSpanAvailable[i].offsetWidth;
 
-                console.log(spanWidth);
-
                 (responsePromiseSpanAvailable[i].parentElement as HTMLSpanElement).style.width = `${spanWidth}px`;
-
-                // responsePromiseSpanAvailable[i].style.display = 'inline-block';
-                // responsePromiseSpanAvailable[i].style.width = `0`;
-                // responsePromiseSpanAvailable[i].style.opacity = '1';
-
-                // responsePromiseSpanAvailable[i].style.transition = `all .6s ${transitionDelay}s linear`;
-                // responsePromiseSpanAvailable[i].style.width = `${spanWidth}px`;
-
-                // transitionDelay += 0.6;
 
                 responsePromiseSpanAvailable[i].style.display = 'inline-block';
                 responsePromiseSpanAvailable[i].style.width = '0';
@@ -126,10 +109,13 @@ export class HomeComponent {
                 
                 responsePromiseSpanAvailable[i].style.animationDelay = `${transitionDelay}s`;
 
+
+                //TODO => CHECK ERROR HAPPENS RANDOMLY "UNDEFINED"
+
                 setTimeout(() => {
                     
                     responsePromiseSpanAvailable[i].style.width = `${spanWidth}px`;
-                }, 25);
+                }, /*25*/ 5);
                 
                 transitionDelay += 0.8;
             }

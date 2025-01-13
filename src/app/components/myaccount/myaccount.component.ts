@@ -64,8 +64,6 @@ export class MyaccountComponent {
 
 
             this.productArray = responseData.result.slice();
-
-            console.log(this.productArray);
         }
 
         else {
@@ -134,8 +132,6 @@ export class MyaccountComponent {
             });
 
             const responseData = await response.json();
-
-            console.log(responseData);
 
 
 
@@ -364,17 +360,5 @@ export class MyaccountComponent {
         }
 
         // -- //
-
-        // const response = await fetch(`${this.appService.hostname}/api/deleteuser/${this.appService.user.id}`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-type': 'application/json',
-        //         'Authorization': `Bearer ${this.appService.user.jwt}`
-        //     }
-        // });
-
-        // const responseData = await response.json();
-
-        // console.log(responseData);
     }
 }

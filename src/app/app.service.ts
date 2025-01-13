@@ -58,7 +58,29 @@ export class AppService {
 
 
 
-    newPostObject = {};
+    newPostObject = {
+        title: '',
+        category_id: 0,
+        description: '',
+        city: '',
+        zip: '',
+        phone: '',
+        email: '',
+        delivery: false,
+        offer: ''
+    };
+
+    newPostObjectUpdate = {
+        title: '',
+        category_id: 0,
+        description: '',
+        city: '',
+        zip: '',
+        phone: '',
+        email: '',
+        delivery: false,
+        offer: ''
+    };
 
     objectNameFileUpdate = {};
 
@@ -135,6 +157,12 @@ export class AppService {
 
 
 
+    currentRoute = window.location.pathname;
+
+    inputTitlePostDivClass_ContainsOn_NotAllActive_NewPostObjectTitleLengthMoreThanZero: boolean = false;
+
+
+
     constructor(private location: Location, public router: Router) {
 
         Object = Object;
@@ -145,6 +173,8 @@ export class AppService {
 
         this.checkMessage();
         this.checkMessageContact();
+
+
 
 
 
@@ -181,6 +211,24 @@ export class AppService {
             footer.style.setProperty('--widthBody', window.getComputedStyle(body).width);
 
         });
+
+
+
+
+
+
+
+
+
+        setInterval(() => {
+
+            if (this.currentRoute !== window.location.pathname) {
+
+                this.currentRoute = window.location.pathname;
+            }
+
+
+        }, 125);
     }
 
 
@@ -645,8 +693,7 @@ export class AppService {
                 }
             }
 
-            console.log(responseMessageData);
-            console.log(window.location.pathname);
+            
 
 
             // update envelope on row if route == /myoffer //
@@ -675,7 +722,7 @@ export class AppService {
 
                 const responseDataRowEnvelope = await responseRowEnvelope.json();
 
-                console.log(responseDataRowEnvelope);
+                
 
 
 
@@ -726,7 +773,7 @@ export class AppService {
 
             const responseMessageData = await responseMessage.json();
 
-            console.log(responseMessageData);
+            
 
 
 
@@ -761,7 +808,7 @@ export class AppService {
 
     manageInterval() {
 
-        console.log(window.location.pathname);
+        
 
         if (!window.location.pathname.startsWith('/myoffer') || !window.location.pathname.startsWith('/mymessage')) {
 
@@ -872,10 +919,10 @@ export class AppService {
 
     getDivElementWidthCarousel() {
 
-        const divLastProduct = (document.getElementsByClassName('section-home-last-product-div')[0] as HTMLDivElement);
+        // const divLastProduct = (document.getElementsByClassName('section-home-last-product-div')[0] as HTMLDivElement);
 
-        const carouselElementDiv = (divLastProduct.getElementsByClassName('section-home-last-product-div-anchor-div') as HTMLCollectionOf<HTMLDivElement>);
-
+        const carouselElementDiv = (document.getElementsByClassName('section-home-last-product-div-anchor-div') as HTMLCollectionOf<HTMLDivElement>);
+        
         let carouselElementDivWidth = null;
 
 
@@ -1108,6 +1155,7 @@ export class AppService {
 
         if (routeHome) {
 
+            const divLoader = (document.getElementsByClassName('loader-div')[0] as HTMLDivElement);
 
 
             if (divLoader.classList.contains('on')) {
@@ -1134,17 +1182,29 @@ export class AppService {
 
         return new Promise(resolve => {
 
-            if (divLoader.classList.contains('on')) {
+            if (divLoader !== undefined) {
 
-                mainElement.classList.remove('off');
-                divLoader.classList.remove('on');
-                divLoader.classList.add('off');
-                footer.classList.remove('off');
+                if (divLoader.classList.contains('on')) {
 
-                resolve(divLoader);
+                    mainElement.classList.remove('off');
+                    divLoader.classList.remove('on');
+                    divLoader.classList.add('off');
+                    footer.classList.remove('off');
+
+                    resolve(divLoader);
+                }
+
+                else if (!divLoader.classList.contains('on')) {
+
+                    setTimeout(() => {
+    
+                        this.checkLoader();
+                    }, 25);
+                    
+                }
             }
 
-            else if (!divLoader.classList.contains('on')) {
+            else {
 
                 setTimeout(() => {
 
@@ -1470,8 +1530,6 @@ export class AppService {
         const imgDivFilterSort = (document.getElementsByClassName('section-search-filter-img')[0] as HTMLImageElement);
         const spanResult = (document.getElementsByClassName('section-search-result-span')[0] as HTMLSpanElement);
 
-        console.log(window.scrollY > this.windowScrollY);
-
         
 
         // check scroll position && if user scroll UP or DOWN //
@@ -1480,16 +1538,12 @@ export class AppService {
 
             if (window.scrollY > 30 && window.scrollY > this.windowScrollY) {
 
-                console.log('>30');
-
                 divFilterSort.classList.remove('inactive');
                 divFilterSort.classList.add('active');
 
             }
 
             else if (window.scrollY <= 135 && window.scrollY <= this.windowScrollY) {
-
-                console.log('<= 135');
 
                 divFilterSort.classList.remove('active');
                 divFilterSort.classList.add('inactive');
@@ -1548,7 +1602,7 @@ export class AppService {
 
                 
 
-                    console.log(this.searchResultKeptSortOffer);
+                    
                     this.handleKeyDownSearch(null);
 
 
@@ -1665,11 +1719,9 @@ export class AppService {
 
             const responseData = await response.json();
 
-            console.log(responseData);
 
 
-
-            if (responseData.hasOwnProperty('result')) {
+            if (responseData.hasOwnProperty('result') || (responseData.hasOwnProperty('flag') && responseData.flag == false)) {
 
                 this.inactiveLoader();
             }
@@ -1747,8 +1799,6 @@ export class AppService {
 
             const responseData = await response.json();
 
-            console.log(responseData);
-
 
 
             // if no more result => remove listener //
@@ -1777,9 +1827,6 @@ export class AppService {
 
                 //
 
-
-                // console.log(maxIndex);
-
                 
 
 
@@ -1799,7 +1846,7 @@ export class AppService {
 
                 const searchResultCopy: any = Object.assign({}, this.searchResult);
 
-                // console.log(searchResultCopy);
+                
 
 
 
@@ -1812,13 +1859,6 @@ export class AppService {
 
 
                 this.searchResult = Object.assign({}, searchResultCopy);
-                
-
-
-
-                // this.searchResult = Object.assign({}, responseData.result);
-
-                // console.log(this.searchResult);
 
 
 
@@ -1858,8 +1898,6 @@ export class AppService {
 
 
     objectToArrayFunction(obj: any, reset: boolean = false) {
-
-        console.log(obj);
 
 
         // !!RESET TO EMPTY ARRAY!! //
@@ -1999,9 +2037,6 @@ export class AppService {
 
             if (city.value.trim().length == 0 && zip.value.trim().length == 0) {
 
-                console.log(minOffer.value);
-                console.log(maxOffer.value);
-
                 const minOfferFinal = minOffer.value;
                 const maxOfferFinal = maxOffer.value;
 
@@ -2101,7 +2136,6 @@ export class AppService {
 
                     let result = this.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
 
-                    console.log(result);
 
 
 
@@ -2238,7 +2272,6 @@ export class AppService {
     
                         let result = this.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
     
-                        console.log(result);
     
                         
                         if (delivery == 'yes') {
@@ -2380,10 +2413,6 @@ export class AppService {
 
                 else if (zip.value.trim().length > 0) {
 
-                    
-                    console.log(city.value);
-                    console.log(zip.value);
-
 
 
                     let latitude = null;
@@ -2414,10 +2443,6 @@ export class AppService {
 
                     if (responseDataCheckCityDatabase.checkCity.length > 0) {
 
-                        console.log(responseDataCheckCityDatabase.checkCity[0]['latitude']);
-                        console.log(responseDataCheckCityDatabase.checkCity[0]['longitude']);
-                        console.log('FOUND!');
-
                         latitude = responseDataCheckCityDatabase.checkCity[0]['latitude'];
                         longitude = responseDataCheckCityDatabase.checkCity[0]['longitude'];
                     }
@@ -2437,9 +2462,6 @@ export class AppService {
 
                         const responseDataCityCoordinatesBack = await responseCityCoordinatesBack.json();
 
-                        console.log(responseDataCityCoordinatesBack);
-
-                        console.log('NOT FOUND!');
 
                         // get coordinates from city //
 
@@ -2465,8 +2487,6 @@ export class AppService {
                         });
 
                         const responseDataCityInsert = await responseCityInsert.json();
-
-                        console.log(responseDataCityInsert);
                     }
 
 
@@ -2496,10 +2516,6 @@ export class AppService {
 
 
                     const responseDataDistance = await responseDistance.json();
-
-                    console.log(responseDataDistance);
-                    console.log(this.searchResultKept);
-                    console.log(radiusValue[Number(radius.value)]);
 
 
 
@@ -2640,8 +2656,6 @@ export class AppService {
 
                         let result = this.searchResultKeptSortOffer.filter((elem: any) => elem.offer[elem.offer.length - 1].offer_offerprice == null || Number(elem.offer[elem.offer.length - 1].offer_offerprice) <= Number(maxOfferFinal.trim()));
 
-                        console.log(result);
-
 
 
 
@@ -2778,7 +2792,6 @@ export class AppService {
         
                             let result = this.searchResultKeptSortOffer.filter((elem: any) => Number(elem.offer[elem.offer.length - 1].offer_offerprice) >= Number(minOfferFinal.trim()) && Number(elem.offer[elem.offer.length - 1].offer_offerprice) < Number(maxOfferFinal.trim()));
         
-                            console.log(result);
         
                             
                             if (delivery == 'yes') {
@@ -2915,12 +2928,6 @@ export class AppService {
 
 
 
-            console.log(this.searchResultKeptSortOffer);
-            console.log(this.searchResultKept);
-
-
-
-
 
 
 
@@ -2929,9 +2936,6 @@ export class AppService {
 
 
             // REMOVE DUPLICATE //
-
-            
-            // TODO => REVISE ALGORYTHM
 
             // get product_id in current searchResultKept //
             const arrayProductId = [];
@@ -2961,8 +2965,6 @@ export class AppService {
 
             
 
-            console.log(objDuplicate);
-
 
 
             // for each product_id found in arrayProductId => increment to get duplicate ones //
@@ -2970,8 +2972,6 @@ export class AppService {
 
                 (objDuplicate as any)[arrayProductId[i]]++;
             }
-
-            console.log(objDuplicate);
 
             
 
