@@ -857,6 +857,11 @@ export class AppService {
 
         const responseData = await response.json();
 
+        if (responseData.hasOwnProperty('flag') && responseData.flag == false) {
+
+            return;
+        }
+
         this.getLastProductArray = responseData.result.slice(0, 10);
 
         return this.getLastProductArray;

@@ -103,46 +103,6 @@ export class ProductComponent {
         this.waitForProductUserIdLoad();
 
         //this.appService.getOtherProductArrayUserResult(this.productData[0].product.product_user_id);
-
-
-
-
-        // map //
-
-
-        setTimeout(() => {
-
-            useGeographic();
-
-            const place = [this.productData[0]['product']['product_longitude'], this.productData[0]['product']['product_latitude']];
-
-            const point = new Point(place);
-
-            this.map = new Map({
-                target: 'map',
-                layers: [
-                  new TileLayer({
-                    source: new OSM(),
-                  }),
-                  new VectorLayer({
-                    source: new VectorSource({
-                        features: [new Feature(point)]
-                    }),
-                    style: {
-                        'circle-radius': 5,
-                        'circle-fill-color': '#ef3737'
-                    },
-                  }),
-                ],
-                view: new View({
-                  center: place,
-                  zoom: 5,
-                }),
-            });
-
-
-        }, 150);
-        
     }
 
 
@@ -180,6 +140,43 @@ export class ProductComponent {
 
 
 
+    
+
+    // map //
+
+    setGeographic(productData: any) {
+
+        useGeographic();
+            
+        const place = [productData[0]['product']['product_longitude'], productData[0]['product']['product_latitude']];
+
+        const point = new Point(place);
+
+        this.map = new Map({
+            target: 'map',
+            layers: [
+                new TileLayer({
+                source: new OSM(),
+                }),
+                new VectorLayer({
+                source: new VectorSource({
+                    features: [new Feature(point)]
+                }),
+                style: {
+                    'circle-radius': 5,
+                    'circle-fill-color': '#ef3737'
+                },
+                }),
+            ],
+            view: new View({
+                center: place,
+                zoom: 5,
+            }),
+        });
+    }
+
+
+
 
 
     async getProductById(productId: string) {
@@ -193,7 +190,7 @@ export class ProductComponent {
         this.productData = Object.assign({}, responseData.result);
 
 
-
+        this.setGeographic(this.productData);
 
 
 
