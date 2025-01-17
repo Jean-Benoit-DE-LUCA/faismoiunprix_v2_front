@@ -722,29 +722,30 @@ export class AppService {
 
                 const responseDataRowEnvelope = await responseRowEnvelope.json();
 
-                
-
 
 
                 // loop over each row //
 
-                for (let i = 0; i < rowOffers.length; i++) {
+                if (responseDataRowEnvelope.hasOwnProperty('result')) {
 
-                    const rowOfferToUpdate = rowOffers[i].getAttribute('data-offer-id');
+                    for (let i = 0; i < rowOffers.length; i++) {
 
-                    for (let y = 0; y < responseDataRowEnvelope['result'].length; y++) {
+                        const rowOfferToUpdate = rowOffers[i].getAttribute('data-offer-id');
 
-                        if (responseDataRowEnvelope['result'][y] == rowOfferToUpdate) {
+                        for (let y = 0; y < responseDataRowEnvelope['result'].length; y++) {
 
-                            const rowOffersImageEnvelope = rowOffers[i].getElementsByClassName('img-envelope offer')[0];
+                            if (responseDataRowEnvelope['result'][y] == rowOfferToUpdate) {
 
-                            rowOffersImageEnvelope.classList.add('active');
+                                const rowOffersImageEnvelope = rowOffers[i].getElementsByClassName('img-envelope offer')[0];
+
+                                rowOffersImageEnvelope.classList.add('active');
+                            }
                         }
+                        
                     }
-                    
                 }
             }
-        }, 300000/*10000*/);  // 5min
+        }, 300000);  // 5min
     }
 
 
